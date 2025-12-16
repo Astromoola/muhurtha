@@ -1,0 +1,1300 @@
+{
+  "meta": {
+    "version": 1,
+    "source": "Classical Muhurta / Muhurta-Yogas (Vara–Tithi / repetition yogas only)",
+    "notes": "Designed to work with panchanga_<city>_<year>.json and a generic rules engine. All names match the JSON lookups: vara, tithi (1..30), nakshatra (1..27)."
+  },
+  "tithiFamilies": {
+    "nanda": [1, 6, 11, 16, 21, 26],
+    "bhadra": [2, 7, 12, 17, 22, 27],
+    "jaya": [3, 8, 13, 18, 23, 28],
+    "rikta": [4, 9, 14, 19, 24, 29],
+    "purna": [5, 10, 15, 20, 25, 30]
+  },
+  "yogas": [
+    {
+      "id": "siddha_vara_tithi",
+      "name": "Siddha",
+      "kind": "vara_tithi",
+      "category": "benefic",
+      "strength": 2,
+      "definition": {
+        "type": "varaTithiFamilies",
+        "combos": [
+          { "vara": "Friday", "tithiFamilies": ["nanda"] },
+          { "vara": "Wednesday", "tithiFamilies": ["bhadra"] },
+          { "vara": "Tuesday", "tithiFamilies": ["jaya"] },
+          { "vara": "Saturday", "tithiFamilies": ["rikta"] },
+          { "vara": "Thursday", "tithiFamilies": ["purna"] }
+        ]
+      }
+    },
+    {
+      "id": "amrita_vara_tithi",
+      "name": "Amrita",
+      "kind": "vara_tithi",
+      "category": "benefic",
+      "strength": 2,
+      "definition": {
+        "type": "varaTithiFamilies",
+        "combos": [
+          { "vara": "Sunday", "tithiFamilies": ["nanda"] },
+          { "vara": "Monday", "tithiFamilies": ["bhadra"] },
+          { "vara": "Tuesday", "tithiFamilies": ["nanda"] },
+          { "vara": "Wednesday", "tithiFamilies": ["jaya"] },
+          { "vara": "Thursday", "tithiFamilies": ["rikta"] },
+          { "vara": "Friday", "tithiFamilies": ["bhadra"] },
+          { "vara": "Saturday", "tithiFamilies": ["purna"] }
+        ]
+      }
+    },
+    {
+      "id": "tripushkara",
+      "name": "Tripushkara",
+      "kind": "vara_tithi_nakshatra",
+      "category": "repetition",
+      "strength": 3,
+      "effect": "events_repeat_3x",
+      "definition": {
+        "type": "triple",
+        "maleficVaras": ["Sunday", "Tuesday", "Saturday"],
+        "tithiFamilies": ["bhadra"],
+        "nakshatras": [
+          "Krittika",
+          "Punarvasu",
+          "Uttara Phalguni",
+          "Vishakha",
+          "Uttara Ashadha",
+          "Purva Bhadrapada"
+        ]
+      }
+    },
+    {
+      "id": "dvipushkara",
+      "name": "Dvipushkara",
+      "kind": "vara_tithi_nakshatra",
+      "category": "repetition",
+      "strength": 2,
+      "effect": "events_repeat_2x",
+      "definition": {
+        "type": "triple",
+        "maleficVaras": ["Sunday", "Tuesday", "Saturday"],
+        "tithiFamilies": ["bhadra"],
+        "nakshatras": ["Mrighashirsha", "Chitra", "Dhanishta"]
+      }
+    },
+    {
+      "id": "krakacha_vara_tithi",
+      "name": "Krakacha",
+      "kind": "vara_tithi",
+      "category": "malefic",
+      "strength": -2,
+      "definition": {
+        "type": "varaTithiList",
+        "pairs": [
+          { "vara": "Sunday",    "tithis": [12] },
+          { "vara": "Monday",    "tithis": [11] },
+          { "vara": "Tuesday",   "tithis": [10] },
+          { "vara": "Wednesday", "tithis": [9] },
+          { "vara": "Thursday",  "tithis": [8] },
+          { "vara": "Friday",    "tithis": [7] },
+          { "vara": "Saturday",  "tithis": [6] }
+        ]
+      }
+    },
+    {
+      "id": "dagdha_vara_tithi",
+      "name": "Dagdha",
+      "kind": "vara_tithi",
+      "category": "malefic",
+      "strength": -2,
+      "definition": {
+        "type": "varaTithiList",
+        "pairs": [
+          { "vara": "Sunday",    "tithis": [12] },
+          { "vara": "Monday",    "tithis": [11] },
+          { "vara": "Tuesday",   "tithis": [5] },
+          { "vara": "Wednesday", "tithis": [2, 3] },
+          { "vara": "Thursday",  "tithis": [6] },
+          { "vara": "Friday",    "tithis": [8] },
+          { "vara": "Saturday",  "tithis": [9] }
+        ]
+      }
+    },
+    {
+      "id": "hutasana_vara_tithi",
+      "name": "Hutasana",
+      "kind": "vara_tithi",
+      "category": "malefic",
+      "strength": -2,
+      "definition": {
+        "type": "varaTithiList",
+        "pairs": [
+          { "vara": "Sunday",    "tithis": [12] },
+          { "vara": "Monday",    "tithis": [6] },
+          { "vara": "Tuesday",   "tithis": [7] },
+          { "vara": "Wednesday", "tithis": [8] },
+          { "vara": "Thursday",  "tithis": [9] },
+          { "vara": "Friday",    "tithis": [10] },
+          { "vara": "Saturday",  "tithis": [11] }
+        ]
+      }
+    },
+    {
+      "id": "visha_vara_tithi",
+      "name": "Visha",
+      "kind": "vara_tithi",
+      "category": "malefic",
+      "strength": -2,
+      "definition": {
+        "type": "varaTithiList",
+        "pairs": [
+          { "vara": "Sunday",    "tithis": [4] },
+          { "vara": "Monday",    "tithis": [6] },
+          { "vara": "Tuesday",   "tithis": [7] },
+          { "vara": "Wednesday", "tithis": [2] },
+          { "vara": "Thursday",  "tithis": [8] },
+          { "vara": "Friday",    "tithis": [9] },
+          { "vara": "Saturday",  "tithis": [7] }
+        ]
+      }
+    },
+    {
+      "id": "samvartaka_vara_tithi",
+      "name": "Samvartaka",
+      "kind": "vara_tithi",
+      "category": "malefic",
+      "strength": -2,
+      "definition": {
+        "type": "varaTithiList",
+        "pairs": [
+          { "vara": "Sunday",    "tithis": [7] },
+          { "vara": "Wednesday", "tithis": [1] }
+        ]
+      }
+    },
+    {
+      "id": "asubha_tithi_nakshatra",
+      "name": "Asubha",
+      "kind": "tithi_nakshatra",
+      "category": "malefic",
+      "strength": -1,
+      "definition": {
+        "type": "tithiNakList",
+        "pairs": [
+          { "tithi": 12, "nakshatras": ["Ashlesha"] },
+          { "tithi": 1,  "nakshatras": ["Uttara Ashadha"] },
+          { "tithi": 2,  "nakshatras": ["Anuradha"] },
+          { "tithi": 5,  "nakshatras": ["Magha"] },
+          { "tithi": 3,  "nakshatras": ["Uttara Phalguni", "Uttara Ashadha", "Uttara Bhadrapada"] },
+          { "tithi": 11, "nakshatras": ["Rohini"] },
+          { "tithi": 13, "nakshatras": ["Swati", "Chitra"] },
+          { "tithi": 7,  "nakshatras": ["Hasta", "Mula"] },
+          { "tithi": 9,  "nakshatras": ["Krittika"] },
+          { "tithi": 8,  "nakshatras": ["Purva Bhadrapada"] },
+          { "tithi": 6,  "nakshatras": ["Rohini"] }
+        ]
+      }
+    },
+    {
+      "id": "poor_luck_ten_months",
+      "name": "Poor Luck in Ten Months",
+      "kind": "tithi_nakshatra",
+      "category": "malefic",
+      "strength": -1,
+      "definition": {
+        "type": "tithiNakList",
+        "pairs": [
+          { "tithi": 2,  "nakshatras": ["Anuradha"] },
+          { "tithi": 3,  "nakshatras": ["Uttara Phalguni", "Uttara Ashadha", "Uttara Bhadrapada"] },
+          { "tithi": 5,  "nakshatras": ["Magha", "Hasta"] },
+          { "tithi": 13, "nakshatras": ["Chitra", "Swati"] },
+          { "tithi": 8,  "nakshatras": ["Rohini"] }
+        ]
+      }
+    },
+    {
+      "id": "sarvartha_siddhi_vara_nakshatra",
+      "name": "Sarvartha Siddhi",
+      "kind": "vara_nakshatra",
+      "category": "benefic",
+      "strength": 2,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          {
+            "vara": "Sunday",
+            "nakshatras": [
+              "Ashwini",
+              "Pushya",
+              "Hasta",
+              "Uttara Phalguni",
+              "Mula",
+              "Uttara Ashadha",
+              "Uttara Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Monday",
+            "nakshatras": [
+              "Rohini",
+              "Mrighashirsha",
+              "Pushya",
+              "Anuradha",
+              "Shravana"
+            ]
+          },
+          {
+            "vara": "Tuesday",
+            "nakshatras": [
+              "Ashwini",
+              "Krittika",
+              "Ashlesha",
+              "Uttara Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Wednesday",
+            "nakshatras": [
+              "Krittika",
+              "Rohini",
+              "Mrighashirsha",
+              "Hasta",
+              "Anuradha"
+            ]
+          },
+          {
+            "vara": "Thursday",
+            "nakshatras": [
+              "Ashwini",
+              "Punarvasu",
+              "Pushya",
+              "Anuradha",
+              "Revati"
+            ]
+          },
+          {
+            "vara": "Friday",
+            "nakshatras": [
+              "Ashwini",
+              "Punarvasu",
+              "Anuradha",
+              "Shravana",
+              "Revati"
+            ]
+          },
+          {
+            "vara": "Saturday",
+            "nakshatras": [
+              "Rohini",
+              "Swati",
+              "Shravana"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "siddha_vara_nakshatra_a",
+      "name": "Siddha (Vara–Nakshatra · Variant 1)",
+      "kind": "vara_nakshatra",
+      "category": "benefic",
+      "strength": 2,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          {
+            "vara": "Sunday",
+            "nakshatras": [
+              "Uttara Phalguni",
+              "Hasta",
+              "Mula",
+              "Uttara Ashadha",
+              "Shravana",
+              "Uttara Bhadrapada",
+              "Revati"
+            ]
+          },
+          {
+            "vara": "Tuesday",
+            "nakshatras": [
+              "Ashwini",
+              "Uttara Phalguni",
+              "Uttara Bhadrapada",
+              "Revati"
+            ]
+          },
+          {
+            "vara": "Wednesday",
+            "nakshatras": [
+              "Krittika",
+              "Purva Phalguni",
+              "Uttara Phalguni",
+              "Anuradha",
+              "Purva Ashadha",
+              "Uttara Ashadha",
+              "Purva Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Friday",
+            "nakshatras": [
+              "Uttara Phalguni",
+              "Hasta",
+              "Chitra",
+              "Swati",
+              "Anuradha",
+              "Purva Ashadha",
+              "Uttara Ashadha",
+              "Shravana",
+              "Dhanishta",
+              "Shatabhisha",
+              "Purva Bhadrapada",
+              "Uttara Bhadrapada"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "siddha_vara_nakshatra_b",
+      "name": "Siddha (Vara–Nakshatra · Variant 2)",
+      "kind": "vara_nakshatra",
+      "category": "benefic",
+      "strength": 2,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          { "vara": "Sunday",    "nakshatras": ["Mula"] },
+          { "vara": "Monday",    "nakshatras": ["Dhanishta"] },
+          { "vara": "Tuesday",   "nakshatras": ["Uttara Bhadrapada"] },
+          { "vara": "Wednesday", "nakshatras": ["Krittika"] },
+          { "vara": "Thursday",  "nakshatras": ["Punarvasu"] },
+          { "vara": "Friday",    "nakshatras": ["Purva Phalguni"] },
+          { "vara": "Saturday",  "nakshatras": ["Swati"] }
+        ]
+      }
+    },
+    {
+      "id": "amrita_vara_nakshatra",
+      "name": "Amrita (Vara–Nakshatra)",
+      "kind": "vara_nakshatra",
+      "category": "benefic",
+      "strength": 2,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          {
+            "vara": "Monday",
+            "nakshatras": [
+              "Rohini",
+              "Mrighashirsha",
+              "Punarvasu",
+              "Swati",
+              "Shravana"
+            ]
+          },
+          {
+            "vara": "Tuesday",
+            "nakshatras": [
+              "Mrighashirsha",
+              "Punarvasu",
+              "Pushya",
+              "Ashlesha",
+              "Magha",
+              "Purva Phalguni",
+              "Hasta",
+              "Chitra",
+              "Swati"
+            ]
+          },
+          {
+            "vara": "Wednesday",
+            "nakshatras": [
+              "Ardra",
+              "Punarvasu",
+              "Pushya",
+              "Ashlesha",
+              "Magha",
+              "Hasta",
+              "Chitra",
+              "Swati",
+              "Vishakha",
+              "Shravana"
+            ]
+          },
+          {
+            "vara": "Thursday",
+            "nakshatras": [
+              "Ashwini",
+              "Punarvasu",
+              "Pushya",
+              "Magha",
+              "Swati"
+            ]
+          },
+          {
+            "vara": "Friday",
+            "nakshatras": [
+              "Ashwini",
+              "Bharani",
+              "Purva Phalguni",
+              "Revati"
+            ]
+          },
+          {
+            "vara": "Saturday",
+            "nakshatras": [
+              "Krittika",
+              "Rohini",
+              "Shatabhisha",
+              "Swati"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "subha_vara_nakshatra",
+      "name": "Subha",
+      "kind": "vara_nakshatra",
+      "category": "benefic",
+      "strength": 2,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          {
+            "vara": "Wednesday",
+            "nakshatras": [
+              "Rohini",
+              "Jyeshtha",
+              "Shatabhisha",
+              "Uttara Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Thursday",
+            "nakshatras": [
+              "Bharani",
+              "Ashlesha",
+              "Vishakha",
+              "Anuradha",
+              "Jyeshtha",
+              "Mula",
+              "Purva Ashadha",
+              "Uttara Ashadha",
+              "Shravana",
+              "Dhanishta"
+            ]
+          },
+          {
+            "vara": "Saturday",
+            "nakshatras": [
+              "Ashwini",
+              "Bharani",
+              "Mrighashirsha",
+              "Ardra",
+              "Pushya",
+              "Magha",
+              "Vishakha",
+              "Anuradha",
+              "Jyeshtha",
+              "Mula",
+              "Uttara Phalguni",
+              "Shravana",
+              "Dhanishta",
+              "Purva Bhadrapada",
+              "Uttara Bhadrapada"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "subha_madhyam_vara_nakshatra",
+      "name": "Subha Madhyam",
+      "kind": "vara_nakshatra",
+      "category": "benefic",
+      "strength": 1,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          {
+            "vara": "Sunday",
+            "nakshatras": [
+              "Bharani",
+              "Krittika",
+              "Rohini",
+              "Mrighashirsha",
+              "Ardra",
+              "Punarvasu",
+              "Ashlesha",
+              "Purva Phalguni",
+              "Chitra",
+              "Swati",
+              "Purva Ashadha",
+              "Dhanishta",
+              "Shatabhisha",
+              "Purva Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Tuesday",
+            "nakshatras": [
+              "Bharani",
+              "Krittika",
+              "Rohini",
+              "Jyeshtha",
+              "Mula",
+              "Purva Ashadha",
+              "Shravana"
+            ]
+          },
+          {
+            "vara": "Thursday",
+            "nakshatras": [
+              "Hasta",
+              "Chitra",
+              "Purva Bhadrapada",
+              "Uttara Bhadrapada"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "shobhana_vara_nakshatra",
+      "name": "Shobhana",
+      "kind": "vara_nakshatra",
+      "category": "benefic",
+      "strength": 1,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          {
+            "vara": "Monday",
+            "nakshatras": [
+              "Ashwini",
+              "Bharani",
+              "Krittika",
+              "Ardra",
+              "Pushya",
+              "Ashlesha",
+              "Magha",
+              "Purva Phalguni",
+              "Hasta",
+              "Anuradha",
+              "Jyeshtha",
+              "Mula",
+              "Dhanishta",
+              "Shatabhisha",
+              "Purva Bhadrapada",
+              "Revati"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "sri_vara_nakshatra",
+      "name": "Sri",
+      "kind": "vara_nakshatra",
+      "category": "benefic",
+      "strength": 2,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          {
+            "vara": "Friday",
+            "nakshatras": [
+              "Bharani",
+              "Krittika",
+              "Mrighashirsha",
+              "Ardra",
+              "Punarvasu"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "difficulty_removal_vara_nakshatra",
+      "name": "Difficulty-Removing Vara/Nakshatra",
+      "kind": "vara_nakshatra",
+      "category": "cleansing",
+      "strength": 1,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          {
+            "vara": "Sunday",
+            "nakshatras": [
+              "Bharani",
+              "Uttara Phalguni",
+              "Mula",
+              "Uttara Ashadha",
+              "Shravana",
+              "Revati"
+            ]
+          },
+          {
+            "vara": "Monday",
+            "nakshatras": [
+              "Rohini",
+              "Mrighashirsha",
+              "Punarvasu",
+              "Swati",
+              "Shravana"
+            ]
+          },
+          {
+            "vara": "Tuesday",
+            "nakshatras": [
+              "Ashwini",
+              "Rohini",
+              "Uttara Phalguni",
+              "Hasta",
+              "Anuradha",
+              "Uttara Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Wednesday",
+            "nakshatras": [
+              "Krittika",
+              "Mrighashirsha",
+              "Purva Phalguni",
+              "Uttara Phalguni",
+              "Anuradha",
+              "Purva Ashadha",
+              "Uttara Ashadha",
+              "Purva Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Thursday",
+            "nakshatras": [
+              "Ashwini",
+              "Punarvasu",
+              "Pushya",
+              "Magha",
+              "Swati"
+            ]
+          },
+          {
+            "vara": "Friday",
+            "nakshatras": [
+              "Ashwini",
+              "Bharani",
+              "Mula",
+              "Revati"
+            ]
+          },
+          {
+            "vara": "Saturday",
+            "nakshatras": [
+              "Krittika",
+              "Rohini",
+              "Swati",
+              "Shatabhisha"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dagdha_vara_nakshatra",
+      "name": "Dagdha (Vara–Nakshatra)",
+      "kind": "vara_nakshatra",
+      "category": "malefic",
+      "strength": -2,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          { "vara": "Sunday",    "nakshatras": ["Bharani"] },
+          { "vara": "Monday",    "nakshatras": ["Chitra"] },
+          { "vara": "Tuesday",   "nakshatras": ["Uttara Ashadha"] },
+          { "vara": "Wednesday", "nakshatras": ["Dhanishta"] },
+          { "vara": "Thursday",  "nakshatras": ["Uttara Phalguni"] },
+          { "vara": "Friday",    "nakshatras": ["Jyeshtha"] },
+          { "vara": "Saturday",  "nakshatras": ["Revati"] }
+        ]
+      }
+    },
+    {
+      "id": "dagdha_fatal_vara_nakshatra",
+      "name": "Dagdha (Fatal Vara–Nakshatra)",
+      "kind": "vara_nakshatra",
+      "category": "malefic",
+      "strength": -3,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          {
+            "vara": "Thursday",
+            "nakshatras": [
+              "Krittika",
+              "Rohini",
+              "Mrighashirsha",
+              "Ardra",
+              "Uttara Phalguni",
+              "Shatabhisha"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "yamaghanta_vara_nakshatra",
+      "name": "Yamaghanta",
+      "kind": "vara_nakshatra",
+      "category": "malefic",
+      "strength": -3,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          { "vara": "Sunday",    "nakshatras": ["Magha"] },
+          { "vara": "Monday",    "nakshatras": ["Vishakha"] },
+          { "vara": "Tuesday",   "nakshatras": ["Ardra"] },
+          { "vara": "Wednesday", "nakshatras": ["Mula"] },
+          { "vara": "Thursday",  "nakshatras": ["Krittika"] },
+          { "vara": "Friday",    "nakshatras": ["Rohini"] },
+          { "vara": "Saturday",  "nakshatras": ["Hasta"] }
+        ]
+      }
+    },
+    {
+      "id": "utpata_vara_nakshatra",
+      "name": "Utpata",
+      "kind": "vara_nakshatra",
+      "category": "malefic",
+      "strength": -2,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          { "vara": "Sunday",    "nakshatras": ["Vishakha"] },
+          { "vara": "Monday",    "nakshatras": ["Purva Ashadha"] },
+          { "vara": "Tuesday",   "nakshatras": ["Dhanishta"] },
+          { "vara": "Wednesday", "nakshatras": ["Revati"] },
+          { "vara": "Thursday",  "nakshatras": ["Rohini"] },
+          { "vara": "Friday",    "nakshatras": ["Pushya"] },
+          { "vara": "Saturday",  "nakshatras": ["Uttara Phalguni"] }
+        ]
+      }
+    },
+    {
+      "id": "mrityu_vara_nakshatra_a",
+      "name": "Mrityu (Set A)",
+      "kind": "vara_nakshatra",
+      "category": "malefic",
+      "strength": -3,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          { "vara": "Sunday",    "nakshatras": ["Anuradha"] },
+          { "vara": "Monday",    "nakshatras": ["Uttara Ashadha"] },
+          { "vara": "Tuesday",   "nakshatras": ["Shatabhisha"] },
+          { "vara": "Wednesday", "nakshatras": ["Ashwini"] },
+          { "vara": "Thursday",  "nakshatras": ["Mrighashirsha"] },
+          { "vara": "Friday",    "nakshatras": ["Ashlesha"] },
+          { "vara": "Saturday",  "nakshatras": ["Hasta"] }
+        ]
+      }
+    },
+    {
+      "id": "mrityu_vara_nakshatra_b",
+      "name": "Mrityu (Set B)",
+      "kind": "vara_nakshatra",
+      "category": "malefic",
+      "strength": -3,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          { "vara": "Sunday",    "nakshatras": ["Vishakha"] },
+          { "vara": "Monday",    "nakshatras": ["Purva Ashadha"] },
+          { "vara": "Tuesday",   "nakshatras": ["Dhanishta"] },
+          { "vara": "Wednesday", "nakshatras": ["Anuradha"] },
+          { "vara": "Thursday",  "nakshatras": ["Mrighashirsha"] },
+          { "vara": "Friday",    "nakshatras": ["Swati", "Rohini"] },
+          { "vara": "Saturday",  "nakshatras": ["Shravana"] }
+        ]
+      }
+    },
+    {
+      "id": "mrityu_vara_nakshatra_c",
+      "name": "Mrityu (Set C)",
+      "kind": "vara_nakshatra",
+      "category": "malefic",
+      "strength": -3,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          {
+            "vara": "Saturday",
+            "nakshatras": [
+              "Punarvasu",
+              "Ashlesha",
+              "Purva Phalguni",
+              "Hasta",
+              "Chitra",
+              "Purva Ashadha",
+              "Uttara Ashadha",
+              "Revati"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "kana_vara_nakshatra",
+      "name": "Kana",
+      "kind": "vara_nakshatra",
+      "category": "malefic",
+      "strength": -2,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          { "vara": "Sunday",    "nakshatras": ["Jyeshtha"] },
+          { "vara": "Monday",    "nakshatras": ["Shravana"] },
+          { "vara": "Tuesday",   "nakshatras": ["Purva Bhadrapada"] },
+          { "vara": "Wednesday", "nakshatras": ["Bharani"] },
+          { "vara": "Thursday",  "nakshatras": ["Ardra"] },
+          { "vara": "Friday",    "nakshatras": ["Magha"] },
+          { "vara": "Saturday",  "nakshatras": ["Chitra"] }
+        ]
+      }
+    },
+    {
+      "id": "nasa_vara_nakshatra",
+      "name": "Nasa",
+      "kind": "vara_nakshatra",
+      "category": "malefic",
+      "strength": -2,
+      "definition": {
+        "type": "varaNakList",
+        "pairs": [
+          {
+            "vara": "Sunday",
+            "nakshatras": [
+              "Ashwini",
+              "Magha",
+              "Vishakha",
+              "Anuradha",
+              "Jyeshtha"
+            ]
+          },
+          {
+            "vara": "Monday",
+            "nakshatras": [
+              "Krittika",
+              "Uttara Phalguni",
+              "Chitra",
+              "Vishakha",
+              "Purva Ashadha",
+              "Uttara Ashadha",
+              "Uttara Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Tuesday",
+            "nakshatras": [
+              "Mrighashirsha",
+              "Ardra",
+              "Vishakha",
+              "Uttara Ashadha",
+              "Dhanishta",
+              "Shatabhisha",
+              "Purva Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Wednesday",
+            "nakshatras": [
+              "Ashwini",
+              "Bharani",
+              "Mula",
+              "Dhanishta",
+              "Revati"
+            ]
+          },
+          {
+            "vara": "Thursday",
+            "nakshatras": [
+              "Uttara Phalguni"
+            ]
+          },
+          {
+            "vara": "Friday",
+            "nakshatras": [
+              "Rohini",
+              "Pushya",
+              "Ashlesha",
+              "Magha",
+              "Vishakha",
+              "Jyeshtha"
+            ]
+          },
+          {
+            "vara": "Saturday",
+            "nakshatras": [
+              "Revati"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "suta_triple",
+      "name": "Suta",
+      "kind": "vara_tithi_nakshatra",
+      "category": "benefic",
+      "strength": 3,
+      "definition": {
+        "type": "tripleList",
+        "triples": [
+          {
+            "vara": "Sunday",
+            "tithis": [5, 7],
+            "nakshatras": ["Pushya", "Hasta", "Mula"]
+          },
+          {
+            "vara": "Monday",
+            "tithis": [5, 7],
+            "nakshatras": ["Mrighashirsha", "Swati", "Shravana"]
+          },
+          {
+            "vara": "Tuesday",
+            "tithis": [5, 7],
+            "nakshatras": [
+              "Ashwini",
+              "Rohini",
+              "Uttara Phalguni",
+              "Uttara Ashadha",
+              "Purva Bhadrapada",
+              "Uttara Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Wednesday",
+            "tithis": [5, 7],
+            "nakshatras": [
+              "Ashwini",
+              "Purva Phalguni",
+              "Purva Ashadha",
+              "Purva Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Thursday",
+            "tithis": [13],
+            "nakshatras": ["Punarvasu", "Purva Ashadha", "Revati"]
+          },
+          {
+            "vara": "Friday",
+            "tithis": [1, 6, 11],
+            "nakshatras": ["Uttara Phalguni", "Swati", "Shatabhisha"]
+          },
+          {
+            "vara": "Saturday",
+            "tithis": [2, 7, 12],
+            "nakshatras": ["Rohini", "Swati", "Dhanishta"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "siddha_triple",
+      "name": "Siddha (Vara–Tithi–Nakshatra)",
+      "kind": "vara_tithi_nakshatra",
+      "category": "benefic",
+      "strength": 3,
+      "definition": {
+        "type": "tripleList",
+        "triples": [
+          {
+            "vara": "Sunday",
+            "tithis": [1, 4, 6, 7, 12],
+            "nakshatras": [
+              "Pushya",
+              "Hasta",
+              "Uttara Phalguni",
+              "Mula",
+              "Uttara Ashadha",
+              "Shravana",
+              "Uttara Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Monday",
+            "tithis": [2, 7, 12, 17, 22, 27],
+            "nakshatras": [
+              "Rohini",
+              "Mrighashirsha",
+              "Punarvasu",
+              "Chitra",
+              "Shravana",
+              "Dhanishta",
+              "Shatabhisha",
+              "Purva Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Tuesday",
+            "tithis": [1, 2, 6, 7, 11, 12, 16, 17, 21, 22, 26, 27],
+            "nakshatras": [
+              "Ashwini",
+              "Mrighashirsha",
+              "Uttara Phalguni",
+              "Chitra",
+              "Anuradha",
+              "Mula",
+              "Dhanishta",
+              "Purva Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Wednesday",
+            "tithis": [2, 3, 7, 8, 12, 13, 17, 18, 22, 23, 27, 28],
+            "nakshatras": [
+              "Rohini",
+              "Mrighashirsha",
+              "Ardra",
+              "Uttara Phalguni",
+              "Anuradha",
+              "Uttara Ashadha"
+            ]
+          },
+          {
+            "vara": "Thursday",
+            "tithis": [4, 5, 7, 9, 13, 14],
+            "nakshatras": [
+              "Ashwini",
+              "Punarvasu",
+              "Pushya",
+              "Magha",
+              "Swati",
+              "Purva Ashadha",
+              "Purva Bhadrapada",
+              "Revati"
+            ]
+          },
+          {
+            "vara": "Friday",
+            "tithis": [1, 2, 6, 7, 11, 12, 16, 17, 21, 22, 26, 27],
+            "nakshatras": [
+              "Ashwini",
+              "Bharani",
+              "Ardra",
+              "Uttara Phalguni",
+              "Chitra",
+              "Swati",
+              "Purva Ashadha",
+              "Revati"
+            ]
+          },
+          {
+            "vara": "Saturday",
+            "tithis": [2, 4, 7, 9, 12, 14, 17, 19, 22, 24, 27, 29],
+            "nakshatras": [
+              "Rohini",
+              "Swati",
+              "Vishakha",
+              "Anuradha",
+              "Dhanishta",
+              "Shatabhisha"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "visha_triple",
+      "name": "Visha (Triple)",
+      "kind": "vara_tithi_nakshatra",
+      "category": "malefic",
+      "strength": -3,
+      "definition": {
+        "type": "tripleList",
+        "triples": [
+          {
+            "vara": "Sunday",
+            "tithis": [5],
+            "nakshatras": ["Krittika"]
+          },
+          {
+            "vara": "Monday",
+            "tithis": [2],
+            "nakshatras": ["Chitra"]
+          },
+          {
+            "vara": "Tuesday",
+            "tithis": [15],
+            "nakshatras": ["Rohini"]
+          },
+          {
+            "vara": "Wednesday",
+            "tithis": [7],
+            "nakshatras": ["Bharani"]
+          },
+          {
+            "vara": "Thursday",
+            "tithis": [13],
+            "nakshatras": ["Anuradha"]
+          },
+          {
+            "vara": "Friday",
+            "tithis": [6],
+            "nakshatras": ["Shravana"]
+          },
+          {
+            "vara": "Saturday",
+            "tithis": [8],
+            "nakshatras": ["Revati"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "vinasa_triple",
+      "name": "Vinasa",
+      "kind": "vara_tithi_nakshatra",
+      "category": "malefic",
+      "strength": -3,
+      "definition": {
+        "type": "tripleList",
+        "triples": [
+          {
+            "vara": "Sunday",
+            "tithis": [3, 4, 8, 9, 13, 14],
+            "nakshatras": [
+              "Bharani",
+              "Mrighashirsha",
+              "Ashlesha",
+              "Vishakha",
+              "Anuradha",
+              "Jyeshtha",
+              "Dhanishta"
+            ]
+          },
+          {
+            "vara": "Monday",
+            "tithis": [6, 7, 11],
+            "nakshatras": [
+              "Krittika",
+              "Bharani",
+              "Magha",
+              "Anuradha",
+              "Purva Ashadha",
+              "Uttara Ashadha",
+              "Uttara Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Tuesday",
+            "tithis": [1, 2, 7, 8, 10, 15],
+            "nakshatras": [
+              "Ardra",
+              "Punarvasu",
+              "Purva Ashadha",
+              "Uttara Ashadha",
+              "Shravana",
+              "Dhanishta",
+              "Shatabhisha",
+              "Jyeshtha"
+            ]
+          },
+          {
+            "vara": "Wednesday",
+            "tithis": [2, 3, 8, 9],
+            "nakshatras": [
+              "Ashwini",
+              "Bharani",
+              "Pushya",
+              "Ashlesha",
+              "Magha",
+              "Mula",
+              "Dhanishta",
+              "Purva Bhadrapada"
+            ]
+          },
+          {
+            "vara": "Thursday",
+            "tithis": [6, 8, 9, 12, 13],
+            "nakshatras": [
+              "Krittika",
+              "Rohini",
+              "Mrighashirsha",
+              "Ardra",
+              "Uttara Phalguni",
+              "Anuradha",
+              "Vishakha",
+              "Shatabhisha"
+            ]
+          },
+          {
+            "vara": "Friday",
+            "tithis": [2, 3, 6, 8, 10, 11],
+            "nakshatras": [
+              "Rohini",
+              "Punarvasu",
+              "Magha",
+              "Vishakha",
+              "Anuradha",
+              "Jyeshtha",
+              "Shravana",
+              "Dhanishta"
+            ]
+          },
+          {
+            "vara": "Saturday",
+            "tithis": [3, 7, 9, 11],
+            "nakshatras": [
+              "Bharani",
+              "Punarvasu",
+              "Pushya",
+              "Purva Phalguni",
+              "Uttara Phalguni",
+              "Hasta",
+              "Purva Ashadha",
+              "Shravana",
+              "Uttara Ashadha"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "rahu_kala",
+      "name": "Rahu Kalam",
+      "kind": "special",
+      "category": "malefic",
+      "strength": -5,
+      "definition": {
+        "type": "band",
+        "band_type": "rahu_kala"
+      }
+    },
+    {
+      "id": "gulika_kala",
+      "name": "Gulika Kalam",
+      "kind": "special",
+      "category": "malefic",
+      "strength": -5,
+      "definition": {
+        "type": "band",
+        "band_type": "gulika_kala"
+      }
+    },
+    {
+      "id": "yamaganda",
+      "name": "Yamaganda",
+      "kind": "special",
+      "category": "malefic",
+      "strength": -5,
+      "definition": {
+        "type": "band",
+        "band_type": "yamaganda"
+      }
+    }
+  ]
+}

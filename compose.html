@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panchanga Insight – Compose</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script type="module" src="./compose.js"></script>
+  </head>
+  <body class="compose-page">
+    <div class="page">
+      <div class="shell-grid">
+        <section class="card hero-panel">
+          <div class="hero-text">
+            <p class="eyebrow">Panchanga Insight</p>
+            <h1>Compose Muhurthas</h1>
+            <p class="muted">Build conditions and find matching slots.</p>
+            <div class="hero-selectors">
+              <label class="hero-select">
+                <span>City</span>
+                <select id="citySelect"></select>
+              </label>
+              <label class="hero-select">
+                <span>Year</span>
+                <select id="yearSelect"></select>
+              </label>
+              <label class="hero-select">
+                <span>Focus date</span>
+                <input id="composeDate" class="input" type="date" />
+              </label>
+              <button id="composeLoad" class="ghost-button" type="button">Load</button>
+            </div>
+          </div>
+        </section>
+
+        <main class="card timeline-panel" id="composeTimelinePanel">
+          <div class="panel-header">
+            <div>
+              <div class="title">Timeline</div>
+            </div>
+          </div>
+          <div class="timeline-controls">
+            <label class="timeline-control">
+              <span>Start date</span>
+              <input type="date" class="input" id="timelineStartInput" />
+            </label>
+            <label class="timeline-control slider">
+              <span>Window (days)</span>
+              <input type="range" id="timelineWindowSlider" min="1" max="120" value="30" />
+            </label>
+            <label class="timeline-control slider">
+              <span>Pan</span>
+              <input type="range" id="timelinePanSlider" min="0" max="100" value="0" />
+            </label>
+          </div>
+          <div class="timeline-meta" id="timelineMeta"></div>
+          <div id="composeBands" class="timeline"></div>
+        </main>
+
+        <aside class="card" id="conditionsPanel">
+          <div class="panel-header">
+            <div>
+              <div class="title">Conditions</div>
+            </div>
+            <div class="slot-controls">
+              <button class="ghost-button" id="clearConditionsBtn" type="button">Clear all</button>
+              <button class="ghost-button" id="addConditionBtn" type="button">Add condition</button>
+            </div>
+          </div>
+          <div id="conditionsList"></div>
+        </aside>
+
+        <aside class="card timeslot-panel" id="composeSlotsPanel">
+          <div class="panel-header">
+            <div>
+              <div class="title">Matching Slots</div>
+              <p class="panel-helper">Toggle view mode (AND/OR) to preview combinations.</p>
+            </div>
+            <div class="slot-controls">
+              <button type="button" class="slot-pill slot-pill-active" id="matchAllBtn">Match ALL</button>
+              <button type="button" class="slot-pill" id="matchAnyBtn">Match ANY</button>
+            </div>
+          </div>
+          <div id="composeSlots"></div>
+        </aside>
+      </div>
+      <div class="modal-backdrop hidden" id="composeModalBackdrop">
+        <div class="modal-card" id="composeModalCard">
+          <div class="modal-header">
+            <div class="modal-title" id="composeModalTitle">Select Values</div>
+            <button class="ghost-button" id="composeModalClose" type="button">✕</button>
+          </div>
+          <div class="modal-body" id="composeModalBody"></div>
+          <div class="modal-footer">
+            <button type="button" class="ghost-button" id="composeModalCancel">Cancel</button>
+            <button type="button" class="primary-button" id="composeModalApply">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -233,8 +233,8 @@ function ensureHelperStyles() {
   padding:12px 16px;
   border:1px solid rgba(239,68,68,0.3);
   border-radius:14px;
-  background:rgba(239,68,68,0.08);
-  color:#991b1b;
+  background:rgba(239,68,68,0.12);
+  color:#fecaca;
   margin-bottom:12px;
 }
 .timeline-error button{
@@ -248,7 +248,7 @@ function ensureHelperStyles() {
   padding:16px;
   border:1px solid var(--border);
   border-radius:14px;
-  background:#fff;
+  background:rgba(15, 23, 42, 0.35);
   color:var(--text);
   box-shadow:none;
 }
@@ -2250,8 +2250,6 @@ function renderActiveChips(container, goodList, badList) {
         const chip = document.createElement("span");
         chip.className = "chip";
         chip.textContent = name;
-        chip.style.background = "#fff";
-        chip.style.color = "#111";
         group.appendChild(chip);
       });
     }

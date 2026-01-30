@@ -1,0 +1,530 @@
+:root[data-theme="dark"] {
+  --color-bg: #0b1220;
+  --color-surface: rgba(255, 255, 255, 0.08);
+  --color-text: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-accent: #8ab4ff;
+  --color-accent-strong: #8ab4ff;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  --color-border: rgba(255, 255, 255, 0.14);
+  --color-border-strong: rgba(255, 255, 255, 0.22);
+  --focus-ring: rgba(138, 180, 255, 0.35);
+
+  --bg: var(--color-bg);
+  --card: var(--color-surface);
+  --text: var(--color-text);
+  --muted: var(--color-muted);
+  --accent: var(--color-accent);
+  --danger: var(--color-danger);
+  --success: var(--color-success);
+  --border: var(--color-border);
+  --text-muted: var(--color-muted);
+}
+
+:root[data-theme="dark"] body {
+  background: radial-gradient(1200px 700px at 10% 10%, rgba(67, 56, 202, 0.2), transparent 60%),
+    radial-gradient(900px 600px at 90% 20%, rgba(20, 184, 166, 0.18), transparent 55%),
+    linear-gradient(135deg, #0b1220 0%, #0f172a 45%, #102f3a 100%);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .hero-panel,
+:root[data-theme="dark"] .filter-panel,
+:root[data-theme="dark"] .toolbar-panel,
+:root[data-theme="dark"] .timeline-panel,
+:root[data-theme="dark"] .timeslot-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 30px 60px rgba(6, 14, 28, 0.35);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+}
+
+:root[data-theme="dark"] button,
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+:root[data-theme="dark"] input:focus,
+:root[data-theme="dark"] select:focus,
+:root[data-theme="dark"] textarea:focus {
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+:root[data-theme="dark"] button,
+:root[data-theme="dark"] .button,
+:root[data-theme="dark"] .ghost-button {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(15, 23, 42, 0.35);
+}
+
+:root[data-theme="dark"] .input,
+:root[data-theme="dark"] .select,
+:root[data-theme="dark"] .button,
+:root[data-theme="dark"] .ghost-button {
+  background: rgba(15, 23, 42, 0.35);
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+:root[data-theme="dark"] .input::placeholder,
+:root[data-theme="dark"] .select::placeholder {
+  color: rgba(148, 163, 184, 0.7);
+}
+
+:root[data-theme="dark"] .ghost-button {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+:root[data-theme="dark"] .hero-panel {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 24px;
+}
+
+:root[data-theme="dark"] .eyebrow {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .hero-stats span {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .hero-stats strong {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] #citySelect,
+:root[data-theme="dark"] #yearSelect {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .toolbar-controls .input,
+:root[data-theme="dark"] .toolbar-controls input[type="date"],
+:root[data-theme="dark"] .toolbar-controls input[type="range"],
+:root[data-theme="dark"] .toolbar-controls select {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .control-block {
+  background: rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .control-block span {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .control-block.slider input[type="range"] {
+  background: transparent;
+}
+
+:root[data-theme="dark"] input[type="range"]::-webkit-slider-runnable-track {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  height: 6px;
+}
+
+:root[data-theme="dark"] input[type="range"]::-webkit-slider-thumb {
+  background: rgba(138, 180, 255, 0.9);
+  border: 2px solid rgba(15, 23, 42, 0.6);
+  margin-top: -4px;
+}
+
+:root[data-theme="dark"] input[type="range"]::-moz-range-track {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  height: 6px;
+}
+
+:root[data-theme="dark"] input[type="range"]::-moz-range-thumb {
+  background: rgba(138, 180, 255, 0.9);
+  border: 2px solid rgba(15, 23, 42, 0.6);
+}
+
+:root[data-theme="dark"] input[type="range"]::-moz-range-progress {
+  background: rgba(138, 180, 255, 0.5);
+  height: 6px;
+  border-radius: 999px;
+}
+
+:root[data-theme="dark"] .summary-card {
+  background: rgba(15, 23, 42, 0.25);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+:root[data-theme="dark"] .summary-card span {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .mini-mode-toggle {
+  background: rgba(15, 23, 42, 0.25);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+:root[data-theme="dark"] .mini-mode-toggle button.active {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px rgba(138, 180, 255, 0.3);
+}
+
+:root[data-theme="dark"] .filter-search {
+  background: transparent;
+}
+
+:root[data-theme="dark"] .summary-card,
+:root[data-theme="dark"] .summary-grid .summary-card,
+:root[data-theme="dark"] .summary-grid .summary-card strong,
+:root[data-theme="dark"] .summary-grid .summary-card span {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .summary-card span {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .timeline-panel .state-card,
+:root[data-theme="dark"] .timeline-panel .state-card.compact,
+:root[data-theme="dark"] .timeline-panel .state-card .chip,
+:root[data-theme="dark"] .active-filters-bar,
+:root[data-theme="dark"] .active-filters-meta,
+:root[data-theme="dark"] .active-filters-chips,
+:root[data-theme="dark"] .active-filters-actions,
+:root[data-theme="dark"] .active-filters-actions .counts,
+:root[data-theme="dark"] .cursor-summary,
+:root[data-theme="dark"] .chip-list,
+:root[data-theme="dark"] .chip,
+:root[data-theme="dark"] .chip-collection,
+:root[data-theme="dark"] .chip-collection.special,
+:root[data-theme="dark"] .slot-chip,
+:root[data-theme="dark"] .mini-chip,
+:root[data-theme="dark"] .slot-chip-more,
+:root[data-theme="dark"] .active-filters-bar .chip,
+:root[data-theme="dark"] .active-filters-bar .mini-chip {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .timeline-panel .state-card.compact,
+:root[data-theme="dark"] .timeline-panel .state-card {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+:root[data-theme="dark"] .timeline-panel .status-line,
+:root[data-theme="dark"] .timeline-panel .status-line.subtle,
+:root[data-theme="dark"] .timeline-panel .timeline-subtitle,
+:root[data-theme="dark"] .timeline-panel .timeline-helper,
+:root[data-theme="dark"] .toolbar-panel .timeline-subtitle,
+:root[data-theme="dark"] .toolbar-panel .timeline-helper,
+:root[data-theme="dark"] .filters-subtitle,
+:root[data-theme="dark"] .panel-helper {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .slot-select-trigger {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .segmented {
+  background: rgba(15, 23, 42, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+:root[data-theme="dark"] .segmented button {
+  background: transparent;
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .segmented button.active {
+  background: rgba(138, 180, 255, 0.18);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px rgba(138, 180, 255, 0.35);
+}
+
+:root[data-theme="dark"] .slot-select-menu {
+  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+:root[data-theme="dark"] .slot-option,
+:root[data-theme="dark"] .slot-option input {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .timeline-panel .timeline,
+:root[data-theme="dark"] .timeline-panel #muhurthaTimeline,
+:root[data-theme="dark"] .timeline-panel #stackedBar {
+  background: rgba(15, 23, 42, 0.2);
+  border-radius: 12px;
+}
+
+:root[data-theme="dark"] .timeline-panel .timeline canvas {
+  background: transparent;
+}
+
+:root[data-theme="dark"] .timeline-panel .section-title {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .timeslot-card,
+:root[data-theme="dark"] .timeslot-card.good,
+:root[data-theme="dark"] .timeslot-card .slot-time,
+:root[data-theme="dark"] .timeslot-card .slot-date,
+:root[data-theme="dark"] .timeslot-card .label,
+:root[data-theme="dark"] .timeslot-card .meta,
+:root[data-theme="dark"] .slot-peak,
+:root[data-theme="dark"] .slot-peak button {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .timeslot-card .meta,
+:root[data-theme="dark"] .timeslot-card .slot-time,
+:root[data-theme="dark"] .timeslot-card .slot-date {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .timeslot-card .slot-time strong {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .slot-peak {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+:root[data-theme="dark"] .slot-peak button {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+:root[data-theme="dark"] .modal-card,
+:root[data-theme="dark"] .modal-body,
+:root[data-theme="dark"] .modal-footer,
+:root[data-theme="dark"] .modal-header,
+:root[data-theme="dark"] .preset-chip,
+:root[data-theme="dark"] .filter-chip,
+:root[data-theme="dark"] .pill-checkbox {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .modal-title,
+:root[data-theme="dark"] .filter-group-title,
+:root[data-theme="dark"] .filter-group-header,
+:root[data-theme="dark"] .filter-group-helper {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .filter-group {
+  background: rgba(15, 23, 42, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+:root[data-theme="dark"] .filter-group .filter-chip,
+:root[data-theme="dark"] .filter-group .pill-checkbox,
+:root[data-theme="dark"] .filter-group .constraint-group {
+  background: rgba(15, 23, 42, 0.3);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .filter-field {
+  border-top-color: rgba(255, 255, 255, 0.12);
+  background: transparent;
+}
+
+:root[data-theme="dark"] .filter-field:nth-child(even) {
+  background: rgba(15, 23, 42, 0.25);
+  border-radius: 12px;
+}
+
+:root[data-theme="dark"] .segments {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+:root[data-theme="dark"] .band-row.band-final .segments {
+  background: rgba(34, 197, 94, 0.16);
+}
+
+:root[data-theme="dark"] .band-row.band-condition.exclude .segments {
+  background: rgba(239, 68, 68, 0.16);
+}
+
+:root[data-theme="dark"] .segment {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+:root[data-theme="dark"] .add-button {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .add-button::before {
+  color: var(--accent);
+}
+
+:root[data-theme="dark"] .add-button:hover {
+  background: rgba(15, 23, 42, 0.5);
+  border-color: rgba(138, 180, 255, 0.35);
+}
+
+:root[data-theme="dark"] .add-button:active {
+  background: rgba(15, 23, 42, 0.6);
+}
+
+:root[data-theme="dark"] .chip-collection .placeholder,
+:root[data-theme="dark"] .chip-placeholder {
+  background: rgba(15, 23, 42, 0.28);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] input[type="range"] {
+  background: transparent;
+}
+
+:root[data-theme="dark"] .ghost-button,
+:root[data-theme="dark"] .button,
+:root[data-theme="dark"] .link-button,
+:root[data-theme="dark"] .slot-pill {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .link-button[disabled] {
+  color: rgba(148, 163, 184, 0.5);
+}
+
+:root[data-theme="dark"] .filter-search .input,
+:root[data-theme="dark"] .filter-search input {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+:root[data-theme="dark"] .filters-panel .input,
+:root[data-theme="dark"] .filters-panel input,
+:root[data-theme="dark"] .filters-panel select,
+:root[data-theme="dark"] .filters-panel textarea {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .muhurtha-adder,
+:root[data-theme="dark"] .muhurtha-adder select {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+:root[data-theme="dark"] .timeline-panel .state-card .placeholder,
+:root[data-theme="dark"] .chip-collection .placeholder,
+:root[data-theme="dark"] .chip-collection.special .placeholder {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .modal-card .ghost-button {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+:root[data-theme="dark"] .modal-backdrop {
+  background: rgba(9, 13, 24, 0.7);
+}
+
+:root[data-theme="dark"] .stacked-label {
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .active-filters-actions .counts,
+:root[data-theme="dark"] .active-filters-meta,
+:root[data-theme="dark"] .active-filters-meta .count,
+:root[data-theme="dark"] .timeline-meta {
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .filter-chip,
+:root[data-theme="dark"] .slot-chip,
+:root[data-theme="dark"] .chip,
+:root[data-theme="dark"] .mini-chip,
+:root[data-theme="dark"] .pill-checkbox,
+:root[data-theme="dark"] .slot-select-trigger {
+  background: rgba(15, 23, 42, 0.25);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .filter-chip.bad.active {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+:root[data-theme="dark"] .slot-pill {
+  border-color: rgba(138, 180, 255, 0.45);
+  background: rgba(138, 180, 255, 0.16);
+  color: #cfe0ff;
+}
+
+:root[data-theme="dark"] .slot-pill-active {
+  background: rgba(138, 180, 255, 0.9);
+  color: #0b1220;
+}
+
+:root[data-theme="dark"] .slot-select-menu {
+  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 24px 40px rgba(6, 14, 28, 0.5);
+}
+
+:root[data-theme="dark"] .timeslot-card {
+  background: rgba(15, 23, 42, 0.35);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 22px rgba(6, 14, 28, 0.4);
+}
+
+:root[data-theme="dark"] .timeslot-card.good {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+:root[data-theme="dark"] .timeline-panel .timeline,
+:root[data-theme="dark"] .timeline-panel .timeline canvas {
+  background: transparent;
+}
+
+:root[data-theme="dark"] .hero-links {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+:root[data-theme="dark"] .muted,
+:root[data-theme="dark"] .meta {
+  color: var(--muted);
+}

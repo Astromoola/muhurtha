@@ -70,7 +70,7 @@ export const DATASETS = [
 ];
 
 state.currentCitySlug = DATASETS[0].slug;
-state.currentYear = DATASETS[0].years[0];
+state.currentYear = DATASETS[0].years.includes(2026) ? 2026 : DATASETS[0].years[0];
 
 export const FILTER_DEFS = {
   vara: { key: "vara", bandKey: "vara", label: "Weekday (Vara)", helper: "Focus on weekdays ruled by specific planets." },

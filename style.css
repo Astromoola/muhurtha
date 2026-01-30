@@ -71,6 +71,22 @@ body {
   line-height: var(--line-body);
 }
 
+:root[data-theme="light"] body {
+  font-weight: 500;
+}
+
+body.timeline-page {
+  --font-h1: 22px;
+  --font-h2: 18px;
+  --font-h3: 15px;
+  --font-body: 13px;
+  --font-meta: 12px;
+  --font-small: 12px;
+  --font-micro: 11px;
+  --line-body: 1.5;
+  --line-meta: 1.45;
+}
+
 .page {
   max-width: 1320px;
   margin: 0 auto;
@@ -141,6 +157,11 @@ body {
   line-height: var(--line-heading);
   font-weight: 780;
   letter-spacing: -0.04em;
+}
+
+body.timeline-page #heroTitle,
+body.timeline-page .hero-text h1 {
+  font-size: var(--font-h1);
 }
 
 .eyebrow {
@@ -235,7 +256,7 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
-  box-shadow: none;
+  box-shadow: var(--shadow-soft);
 }
 
 .title {

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panchanga Timeline</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <div class="card">
+        <div class="header">
+          <div class="title">Panchanga Timeline</div>
+          <div class="controls">
+            <input id="dateInput" class="input" type="date" />
+            <button id="todayBtn" class="button" type="button">Today</button>
+            <a class="button" href="./day.html">Day View</a>
+          </div>
+        </div>
+        <div id="metaBar" class="muted"></div>
+        <div class="notice">
+          Tip: toggle bands below to show/hide rows. Hover segments for exact times.
+        </div>
+        <div id="bandFilters" class="band-filters"></div>
+        <div id="timeline" class="timeline"></div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="header">
+          <div class="title">Special Muhurthas (Year View)</div>
+          <div class="controls">
+            <select id="muhurthaSelect" class="select"></select>
+            <input id="muhurthaCenter" class="input" type="date" />
+            <label class="muted" style="display:flex;align-items:center;gap:6px;">
+              Window (days)
+              <input id="muhurthaWindow" type="range" min="7" max="120" value="30" />
+            </label>
+          </div>
+        </div>
+        <div id="muhurthaMeta" class="muted"></div>
+        <div id="muhurthaTimeline" class="timeline"></div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="header">
+          <div class="title">All Yogas (Debug List)</div>
+        </div>
+        <div id="yogaList" class="band-row"></div>
+      </div>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

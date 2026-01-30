@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stellar Muhurtha – Prototype</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #070b10;
+      --bg-elevated: #101722;
+      --bg-soft: #151d29;
+      --accent: #f5b544;
+      --accent-soft: rgba(245,181,68,0.18);
+      --accent-strong: #ffce64;
+      --text: #f5f7ff;
+      --text-soft: #c2c8dd;
+      --text-muted: #8a90a4;
+      --danger: #ff7b7b;
+      --success: #4caf6f;
+      --neutral: #3d465a;
+      --border-subtle: #252d3c;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(0,0,0,0.5);
+      --shadow-light: 0 10px 26px rgba(0,0,0,0.35);
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      background: radial-gradient(circle at top, #10182a 0, #05060a 55%, #000 100%);
+      color: var(--text);
+      font-family: var(--font-sans);
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1240px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(9,11,19,0.95));
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header */
+
+    .app-header {
+      padding: 18px 24px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: radial-gradient(circle at top left, rgba(245,181,68,0.12), transparent 55%);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: conic-gradient(from 220deg, #f5b544, #ff8a65, #9c6bff, #f5b544);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 0 18px rgba(245,181,68,0.55);
+    }
+
+    .brand-text-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-text-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .segmented-toggle {
+      background: rgba(10,12,20,0.8);
+      border-radius: 999px;
+      padding: 3px;
+      display: inline-flex;
+      gap: 3px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .segmented-toggle button {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--text-soft);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease-out;
+    }
+
+    .segmented-toggle button.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #000;
+      font-weight: 600;
+      box-shadow: var(--shadow-light);
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(4,7,12,0.9);
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, var(--accent), #ff8a65);
+      box-shadow: 0 0 9px rgba(245,181,68,0.7);
+    }
+
+    /* Main views */
+
+    .app-main {
+      flex: 1;
+      padding: 10px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .view {
+      display: none;
+      height: 100%;
+    }
+
+    .view.active {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    /* Home view */
+
+    .home-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.6fr);
+      gap: 24px;
+      padding: 18px 6px 0;
+    }
+
+    .home-left {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .home-title {
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .home-subtitle {
+      font-size: 14px;
+      color: var(--text-soft);
+      max-width: 420px;
+    }
+
+    .home-pill-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--text-muted);
+    }
+
+    .home-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .btn-primary, .btn-ghost {
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.16s ease-out;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #000;
+      font-weight: 600;
+      box-shadow: var(--shadow-light);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.35);
+    }
+
+    .btn-ghost {
+      background: rgba(10,12,20,0.8);
+      color: var(--text-soft);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(255,255,255,0.22);
+      background: rgba(19,26,40,0.95);
+    }
+
+    .home-right {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .mode-card {
+      background: radial-gradient(circle at top left, rgba(245,181,68,0.12), rgba(7,10,18,0.98));
+      border-radius: var(--radius-lg);
+      padding: 16px 16px 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: var(--shadow-light);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.16s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-card:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(255,255,255,0.1), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.18s ease-out;
+      pointer-events: none;
+    }
+
+    .mode-card:hover:before {
+      opacity: 1;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+      border-color: rgba(245,181,68,0.4);
+    }
+
+    .mode-card-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .mode-card-subtitle {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .mode-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      border-radius: 999px;
+      padding: 2px 8px;
+      border: 1px solid rgba(255,255,255,0.16);
+      font-size: 10px;
+      color: var(--text-soft);
+      background: rgba(9,12,20,0.85);
+    }
+
+    /* Basic mode layout */
+
+    .view-basic-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 2fr);
+      gap: 20px;
+      padding: 14px 4px 0;
+      height: 100%;
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.03), rgba(6,9,16,0.98));
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 14px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow-light);
+      min-height: 0;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .panel-subtitle {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .step-indicator {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .form-section {
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.15s ease-out;
+    }
+
+    .radio-option:hover {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .radio-option input {
+      accent-color: var(--accent);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--text-soft);
+      flex: 1;
+      min-width: 130px;
+    }
+
+    .field input,
+    .field select {
+      background: rgba(3,6,12,0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text);
+      padding: 7px 11px;
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(245,181,68,0.35);
+    }
+
+    .quick-range-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip-button {
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(4,7,12,0.9);
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: all 0.15s ease-out;
+    }
+
+    .chip-button:hover {
+      border-color: rgba(255,255,255,0.32);
+      background: rgba(17,22,34,0.98);
+    }
+
+    .toggle-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .toggle-label-main {
+      font-size: 13px;
+    }
+
+    .toggle-label-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .toggle {
+      position: relative;
+      width: 32px;
+      height: 18px;
+      border-radius: 999px;
+      background: #2a3140;
+      border: 1px solid rgba(255,255,255,0.20);
+      flex-shrink: 0;
+    }
+
+    .toggle-thumb {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      top: 1px;
+      left: 1px;
+      transition: transform 0.16s ease-out, background 0.16s;
+    }
+
+    .toggle.on {
+      background: radial-gradient(circle at center, var(--accent), #ff8e4a);
+      border-color: rgba(245,181,68,0.85);
+    }
+
+    .toggle.on .toggle-thumb {
+      transform: translateX(13px);
+      background: #000;
+    }
+
+    .panel-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2px;
+      gap: 10px;
+    }
+
+    .hint-text {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Results panel */
+
+    .results-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .result-card {
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .result-rank {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .result-stars {
+      font-size: 13px;
+      color: var(--accent);
+    }
+
+    .result-meta {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .result-highlights {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .btn-xs {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(4,7,12,0.95);
+      color: var(--text-soft);
+      cursor: pointer;
+    }
+
+    .btn-xs.primary {
+      border-color: var(--accent);
+      background: rgba(245,181,68,0.16);
+      color: var(--accent-strong);
+    }
+
+    .result-score-pill {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.65);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--text-soft);
+    }
+
+    /* Advanced view */
+
+    .view-advanced-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 2.4fr) minmax(0, 1.3fr);
+      gap: 16px;
+      padding: 14px 4px 0;
+      height: 100%;
+    }
+
+    .panel-scroll {
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .advanced-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .calendar-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(3,6,13,0.95);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .timeline-canvas {
+      margin-top: 6px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 10px 10px 12px;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.03), rgba(2,5,12,0.98));
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .time-axis {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .band-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .band-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .band-label-name {
+      font-weight: 500;
+    }
+
+    .band-label-tag {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text-muted);
+    }
+
+    .band-bar {
+      height: 16px;
+      border-radius: 999px;
+      background: var(--neutral);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .band-segment {
+      position: absolute;
+      top: 2px;
+      bottom: 2px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(76,175,111,0.9), rgba(148,230,148,0.95));
+      box-shadow: 0 0 12px rgba(76,175,111,0.7);
+    }
+
+    .band-segment.malefic {
+      background: linear-gradient(135deg, rgba(255,123,123,0.9), rgba(255,163,138,0.95));
+      box-shadow: 0 0 12px rgba(255,123,123,0.7);
+    }
+
+    .band-segment.highlight {
+      outline: 2px solid rgba(245,181,68,0.9);
+      outline-offset: -2px;
+    }
+
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .legend-chip {
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(3,6,12,0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-swatch {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--neutral);
+    }
+
+    .legend-swatch.benefic {
+      background: var(--success);
+    }
+
+    .legend-swatch.malefic {
+      background: var(--danger);
+    }
+
+    .legend-swatch.repetition {
+      background-image: repeating-linear-gradient(
+        135deg,
+        #ffd54f,
+        #ffd54f 3px,
+        #b28900 3px,
+        #b28900 6px
+      );
+    }
+
+    .filter-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .filter-check-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-check-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .filter-check-row input[type="checkbox"] {
+      accent-color: var(--accent);
+    }
+
+    .pill-input {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(3,6,13,0.98);
+      padding: 6px 10px;
+      font-size: 11px;
+      color: var(--text-soft);
+      outline: none;
+      width: 100%;
+    }
+
+    .slot-list {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 190px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .slot-card {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(4,7,13,0.95);
+      padding: 8px 10px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .slot-time {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .slot-summary {
+      color: var(--text-muted);
+    }
+
+    .slot-tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .slot-tag {
+      border-radius: 999px;
+      padding: 2px 7px;
+      border: 1px solid rgba(255,255,255,0.16);
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    /* Footer */
+
+    .app-footer {
+      padding: 6px 20px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 11px;
+      color: var(--text-muted);
+      background: rgba(3,6,13,0.96);
+    }
+
+    .foot-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 960px) {
+      .home-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .view-basic-inner,
+      .view-advanced-inner {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+
+      .panel {
+        max-height: none;
+      }
+
+      .app-main {
+        overflow-y: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">ॐ</div>
+        <div class="brand-text">
+          <div class="brand-text-title">Stellar Muhurtha</div>
+          <div class="brand-text-sub">Panchanga-powered auspicious timings</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="segmented-toggle" id="viewToggle">
+          <button data-target="view-home" class="active">Home</button>
+          <button data-target="view-basic">Muhurtha Finder</button>
+          <button data-target="view-advanced">Timeline Explorer</button>
+        </div>
+        <div class="chip">
+          <span class="chip-dot"></span>
+          Prototype · Client-side UX only
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="app-main">
+      <!-- HOME VIEW -->
+      <section id="view-home" class="view active">
+        <div class="home-hero">
+          <div class="home-left">
+            <div class="home-title">
+              Choose auspicious timings<br />
+              without wrestling with tables.
+            </div>
+            <div class="home-subtitle">
+              Visualise Panchanga like a timeline, apply classical Muhurtha rules,
+              and pick time slots that simply feel right — even for non-astrologers.
+            </div>
+            <div class="home-pill-row">
+              <span class="pill">Panchanga · Vara–Tithi–Nakshatra</span>
+              <span class="pill">Rahu · Yamaganda · Durmuhurta</span>
+              <span class="pill">Sarvartha Siddhi · Siddha · Amrita</span>
+            </div>
+            <div class="home-actions">
+              <button class="btn-primary" data-target="view-basic">
+                🔍 Find Muhurtha
+              </button>
+              <button class="btn-ghost" data-target="view-advanced">
+                📊 Open Timeline Explorer
+              </button>
+            </div>
+          </div>
+
+          <div class="home-right">
+            <div class="mode-card" data-target="view-basic">
+              <div class="mode-card-title">🔍 Muhurtha Finder</div>
+              <div class="mode-card-subtitle">
+                For families & clients — choose the event, date range, and get
+                a ranked list of suitable time slots.
+              </div>
+              <div class="tag-row">
+                <span class="tag">Marriage</span>
+                <span class="tag">Griha Pravesha</span>
+                <span class="tag">Business opening</span>
+              </div>
+              <div class="mode-card-footer">
+                <span>Simple guided flow</span>
+                <span>Step 1 · 2 · 3 →</span>
+              </div>
+            </div>
+
+            <div class="mode-card" data-target="view-advanced">
+              <div class="mode-card-title">📊 Panchanga Timeline</div>
+              <div class="mode-card-subtitle">
+                For you as an astrologer — stacked multi-band timeline with
+                Vara, Tithi, Nakshatra, Kalas, and Muhurtha yogas.
+              </div>
+              <div class="tag-row">
+                <span class="tag">Grafana-style view</span>
+                <span class="tag">Day & multi-day strips</span>
+                <span class="tag">Rule overlays</span>
+              </div>
+              <div class="mode-card-footer">
+                <span>Full control · Expert mode</span>
+                <span>See overlaps visually →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BASIC MODE VIEW -->
+      <section id="view-basic" class="view">
+        <div class="view-basic-inner">
+          <!-- LEFT: FORM -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Muhurtha Finder</div>
+                <div class="panel-subtitle">
+                  Define purpose & search window. Rules stay behind the scenes.
+                </div>
+              </div>
+              <div class="step-indicator">Prototype · Steps 1–3</div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-label">Step 1 · Purpose</div>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="purpose" checked />
+                  <span>Marriage Muhurtha</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="purpose" />
+                  <span>Griha Pravesha</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="purpose" />
+                  <span>Business Opening</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="purpose" />
+                  <span>Travel / Journey Start</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="purpose" />
+                  <span>Naming Ceremony</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="purpose" />
+                  <span>Custom (expert-defined rules)</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-label">Step 2 · Date Range & Location</div>
+              <div class="input-row">
+                <div class="field">
+                  <span>Start date</span>
+                  <input type="date" />
+                </div>
+                <div class="field">
+                  <span>End date</span>
+                  <input type="date" />
+                </div>
+              </div>
+              <div class="quick-range-row">
+                <button class="chip-button">Next 15 days</button>
+                <button class="chip-button">Next 30 days</button>
+                <button class="chip-button">Next 3 months</button>
+              </div>
+              <div class="input-row">
+                <div class="field">
+                  <span>Location</span>
+                  <select>
+                    <option>Bangalore (IST)</option>
+                    <option>Custom · coming soon</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <span>Minimum duration</span>
+                  <select>
+                    <option>45 minutes</option>
+                    <option>30 minutes</option>
+                    <option>60 minutes</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-label">Step 3 · Preferences</div>
+              <div class="toggle-group">
+                <div class="toggle-row">
+                  <div>
+                    <div class="toggle-label-main">Avoid Rahu Kalam</div>
+                    <div class="toggle-label-sub">
+                      Skip periods marked as Rahu Kala on this Panchanga.
+                    </div>
+                  </div>
+                  <div class="toggle on">
+                    <div class="toggle-thumb"></div>
+                  </div>
+                </div>
+                <div class="toggle-row">
+                  <div>
+                    <div class="toggle-label-main">Avoid Yamaganda & Gulika</div>
+                    <div class="toggle-label-sub">
+                      Exclude inauspicious kalas overlapping candidate slots.
+                    </div>
+                  </div>
+                  <div class="toggle on">
+                    <div class="toggle-thumb"></div>
+                  </div>
+                </div>
+                <div class="toggle-row">
+                  <div>
+                    <div class="toggle-label-main">Prefer Sarvartha / Siddha / Amrita</div>
+                    <div class="toggle-label-sub">
+                      Give higher score when these yogas occur.
+                    </div>
+                  </div>
+                  <div class="toggle on">
+                    <div class="toggle-thumb"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-footer">
+              <div class="hint-text">
+                This is a UX prototype. The actual engine will use your Panchanga JSON
+                and rules.json in the background.
+              </div>
+              <button class="btn-primary">✨ Find Muhurthas</button>
+            </div>
+          </div>
+
+          <!-- RIGHT: RESULTS -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Suggested Muhurtha Windows</div>
+                <div class="panel-subtitle">
+                  Ranked using Panchanga + classical Muhurtha rules.
+                </div>
+              </div>
+              <div class="step-indicator">Sample output · static mock</div>
+            </div>
+
+            <div class="results-list">
+              <div class="result-card">
+                <div class="result-header">
+                  <div class="result-rank">#1 · Fri, 14 Mar 2025</div>
+                  <div class="result-stars">★★★★★</div>
+                </div>
+                <div class="result-meta">10:42 – 11:58 · Bangalore (IST)</div>
+                <div class="result-highlights">
+                  ✓ Pushya Nakshatra · ✓ Siddha Yoga · ✓ No Rahu/Yamacala overlap
+                </div>
+                <div class="result-actions">
+                  <button class="btn-xs primary">View on Timeline</button>
+                  <button class="btn-xs">Add to Calendar</button>
+                </div>
+                <div class="result-score-pill">Score: +9</div>
+              </div>
+
+              <div class="result-card">
+                <div class="result-header">
+                  <div class="result-rank">#2 · Sat, 22 Mar 2025</div>
+                  <div class="result-stars">★★★★☆</div>
+                </div>
+                <div class="result-meta">09:10 – 10:00 · Bangalore (IST)</div>
+                <div class="result-highlights">
+                  ✓ Uttara Phalguni · ✓ Benefic Vara–Tithi · ✗ Minor yoga present
+                </div>
+                <div class="result-actions">
+                  <button class="btn-xs primary">View on Timeline</button>
+                  <button class="btn-xs">Add to Calendar</button>
+                </div>
+                <div class="result-score-pill">Score: +7</div>
+              </div>
+
+              <div class="result-card">
+                <div class="result-header">
+                  <div class="result-rank">#3 · Tue, 11 Mar 2025</div>
+                  <div class="result-stars">★★★☆☆</div>
+                </div>
+                <div class="result-meta">13:15 – 14:00 · Bangalore (IST)</div>
+                <div class="result-highlights">
+                  ✓ Hasta Nakshatra · ✓ Good Tara Bala · ✗ Brief Rahu overlap (edge)
+                </div>
+                <div class="result-actions">
+                  <button class="btn-xs primary">View on Timeline</button>
+                  <button class="btn-xs">Add to Calendar</button>
+                </div>
+                <div class="result-score-pill">Score: +5</div>
+              </div>
+            </div>
+
+            <div class="panel-footer">
+              <div class="hint-text">
+                Later you can export this as a PDF handout or save favourite slots.
+              </div>
+              <div class="foot-right">
+                <button class="btn-ghost">Export PDF</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ADVANCED VIEW -->
+      <section id="view-advanced" class="view">
+        <div class="view-advanced-inner">
+          <!-- LEFT FILTER PANEL -->
+          <div class="panel panel-scroll">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Timeline Filters</div>
+                <div class="panel-subtitle">
+                  Choose which Panchanga layers and rules to visualise.
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-label">Bands to display</div>
+              <div class="filter-checklist">
+                <div class="filter-check-row">
+                  <label>
+                    <input type="checkbox" checked />
+                    <span>Vara (weekday)</span>
+                  </label>
+                </div>
+                <div class="filter-check-row">
+                  <label>
+                    <input type="checkbox" checked />
+                    <span>Tithi</span>
+                  </label>
+                </div>
+                <div class="filter-check-row">
+                  <label>
+                    <input type="checkbox" checked />
+                    <span>Nakshatra</span>
+                  </label>
+                </div>
+                <div class="filter-check-row">
+                  <label>
+                    <input type="checkbox" />
+                    <span>Nakshatra-pada</span>
+                  </label>
+                  <span style="font-size:11px;color:var(--text-muted);">Advanced</span>
+                </div>
+                <div class="filter-check-row">
+                  <label>
+                    <input type="checkbox" checked />
+                    <span>Kāla bands (Rahu, Yama, Gulika)</span>
+                  </label>
+                </div>
+                <div class="filter-check-row">
+                  <label>
+                    <input type="checkbox" checked />
+                    <span>Muhurtha yogas (rules.json)</span>
+                  </label>
+                </div>
+                <div class="filter-check-row">
+                  <label>
+                    <input type="checkbox" />
+                    <span>Hora</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-label">Include / Exclude</div>
+              <div class="field">
+                <span>Nakshatras to focus on</span>
+                <input class="pill-input" placeholder="e.g. Pushya, Uttara Phalguni, Rohini" />
+              </div>
+              <div class="field">
+                <span>Exclude Kalas</span>
+                <input class="pill-input" placeholder="e.g. Rahu, Yamaganda, Gulika" />
+              </div>
+              <div class="field">
+                <span>Minimum continuous window</span>
+                <select>
+                  <option>30 minutes</option>
+                  <option>45 minutes</option>
+                  <option>60 minutes</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-label">Rule presets</div>
+              <div class="filter-checklist">
+                <div class="filter-check-row">
+                  <label>
+                    <input type="checkbox" checked />
+                    <span>Highlight Sarvartha Siddhi</span>
+                  </label>
+                </div>
+                <div class="filter-check-row">
+                  <label>
+                    <input type="checkbox" checked />
+                    <span>Highlight Siddha / Amrita (vara–tithi / vara–nakshatra)</span>
+                  </label>
+                </div>
+                <div class="filter-check-row">
+                  <label>
+                    <input type="checkbox" checked />
+                    <span>Mark Dagdha / Krakacha / Visha as malefic</span>
+                  </label>
+                </div>
+                <div class="filter-check-row">
+                  <label>
+                    <input type="checkbox" />
+                    <span>Show repetition yogas (Tripushkara / Dvipushkara)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-footer">
+              <div class="hint-text">
+                In the real app, this panel will map directly to your rules.json DSL.
+              </div>
+            </div>
+          </div>
+
+          <!-- CENTER TIMELINE -->
+          <div class="panel">
+            <div class="advanced-meta-row">
+              <div class="calendar-chip">
+                📅 <strong>14 March 2025</strong>
+                <span style="color:var(--text-muted);"> · Bangalore · IST</span>
+              </div>
+              <div>
+                <button class="btn-ghost" style="padding:4px 10px;font-size:11px;">
+                  &minus; Zoom
+                </button>
+                <button class="btn-ghost" style="padding:4px 10px;font-size:11px;">
+                  + Zoom
+                </button>
+              </div>
+            </div>
+
+            <div class="timeline-canvas">
+              <div class="time-axis">
+                <span>00:00</span>
+                <span>06:00</span>
+                <span>12:00</span>
+                <span>18:00</span>
+                <span>24:00</span>
+              </div>
+
+              <!-- Vara band -->
+              <div class="band-row">
+                <div class="band-label">
+                  <span class="band-label-name">Vara</span>
+                  <span class="band-label-tag">Friday</span>
+                </div>
+                <div class="band-bar">
+                  <div class="band-segment" style="left:2%;right:2%;opacity:0.6;"></div>
+                </div>
+              </div>
+
+              <!-- Tithi band -->
+              <div class="band-row">
+                <div class="band-label">
+                  <span class="band-label-name">Tithi</span>
+                  <span class="band-label-tag">Shukla Dwitiya → Shukla Tritiya</span>
+                </div>
+                <div class="band-bar">
+                  <div class="band-segment" style="left:2%;right:52%;"></div>
+                  <div class="band-segment" style="left:50%;right:4%;opacity:0.7;"></div>
+                </div>
+              </div>
+
+              <!-- Nakshatra band -->
+              <div class="band-row">
+                <div class="band-label">
+                  <span class="band-label-name">Nakshatra</span>
+                  <span class="band-label-tag">Ashwini → Bharani → Krittika</span>
+                </div>
+                <div class="band-bar">
+                  <div class="band-segment" style="left:0%;right:72%;opacity:0.55;"></div>
+                  <div class="band-segment highlight" style="left:28%;right:36%;"></div>
+                  <div class="band-segment" style="left:64%;right:0%;opacity:0.55;"></div>
+                </div>
+              </div>
+
+              <!-- Kala band -->
+              <div class="band-row">
+                <div class="band-label">
+                  <span class="band-label-name">Kala</span>
+                  <span class="band-label-tag">Rahu · Yamaganda · Gulika</span>
+                </div>
+                <div class="band-bar">
+                  <div class="band-segment malefic" style="left:9%;right:74%;opacity:0.8;"></div>
+                  <div class="band-segment malefic" style="left:42%;right:37%;opacity:0.8;"></div>
+                  <div class="band-segment malefic" style="left:71%;right:6%;opacity:0.8;"></div>
+                </div>
+              </div>
+
+              <!-- Yoga band -->
+              <div class="band-row">
+                <div class="band-label">
+                  <span class="band-label-name">Muhurtha Yogas</span>
+                  <span class="band-label-tag">Sarvartha Siddhi · Siddha</span>
+                </div>
+                <div class="band-bar">
+                  <div class="band-segment" style="left:30%;right:52%;"></div>
+                  <div class="band-segment" style="left:56%;right:32%;opacity:0.8;"></div>
+                </div>
+              </div>
+
+              <div class="legend-row">
+                <div class="legend-chip">
+                  <span class="legend-swatch benefic"></span> Benefic segments
+                </div>
+                <div class="legend-chip">
+                  <span class="legend-swatch malefic"></span> Malefic Kala / Dosha
+                </div>
+                <div class="legend-chip">
+                  <span class="legend-swatch repetition"></span> Repetition yogas (Tripushkara)
+                </div>
+                <div class="legend-chip">
+                  <span class="legend-swatch"></span> Neutral / filler segments
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-footer">
+              <div class="hint-text">
+                Click a segment in the real app to see exact times, active yogas, and
+                derived scores. This mockup shows the layout only.
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT INSPECTOR PANEL -->
+          <div class="panel panel-scroll">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Inspector & Shortlist</div>
+                <div class="panel-subtitle">
+                  Inspect a highlighted segment and capture potential Muhurtha slots.
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-label">Selected segment</div>
+              <div style="font-size:12px;color:var(--text-soft);display:flex;flex-direction:column;gap:4px;">
+                <div><strong>Element:</strong> Nakshatra</div>
+                <div><strong>Value:</strong> Pushya</div>
+                <div><strong>Time:</strong> 10:10 – 13:12 IST</div>
+                <div><strong>Overlapping Yogas:</strong> Sarvartha Siddhi, Amrita (vara–tithi)</div>
+                <div><strong>Kala status:</strong> Avoids Rahu · Slight overlap with Yamaganda edge</div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-label">Notes (for you as astrologer)</div>
+              <textarea class="pill-input" rows="3" style="resize:vertical;height:70px;"
+                placeholder="e.g. good for business opening, not ideal for sensitive health-related acts"></textarea>
+              <div style="display:flex;justify-content:flex-end;margin-top:4px;">
+                <button class="btn-ghost" style="padding:4px 10px;font-size:11px;">Add to shortlist</button>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-label">Shortlisted slots</div>
+              <div class="slot-list">
+                <div class="slot-card">
+                  <div class="slot-time">10:42 – 11:58 · Marriage candidate</div>
+                  <div class="slot-summary">
+                    Pushya Nakshatra · Sarvartha Siddhi · avoids Rahu/Yama · strong Vara–Tithi.
+                  </div>
+                  <div class="slot-tag-row">
+                    <span class="slot-tag">Score +9</span>
+                    <span class="slot-tag">Marriage</span>
+                    <span class="slot-tag">Export later</span>
+                  </div>
+                </div>
+
+                <div class="slot-card">
+                  <div class="slot-time">09:10 – 10:00 · Business candidate</div>
+                  <div class="slot-summary">
+                    Uttara Phalguni · benefic Vara–Nakshatra · minor Kala overlap.
+                  </div>
+                  <div class="slot-tag-row">
+                    <span class="slot-tag">Score +7</span>
+                    <span class="slot-tag">Business</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-footer">
+              <div class="hint-text">
+                In the final app, shortlist could be exported as PDF or saved to the user's profile.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+      <div>Stellar Muhurtha · Panchanga UX prototype</div>
+      <div class="foot-right">
+        <span>All logic will be powered by your Panchanga JSON + rules.json.</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Simple view switching
+    const viewButtons = document.querySelectorAll('[data-target]');
+    const views = document.querySelectorAll('.view');
+    const headerToggleButtons = document.querySelectorAll('#viewToggle button');
+
+    function activateView(targetId) {
+      views.forEach(v => v.classList.toggle('active', v.id === targetId));
+      headerToggleButtons.forEach(btn =>
+        btn.classList.toggle('active', btn.dataset.target === targetId)
+      );
+      // Scroll main to top when switching
+      document.querySelector('.app-main').scrollTop = 0;
+    }
+
+    viewButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = btn.dataset.target;
+        if (id) activateView(id);
+      });
+    });
+
+    // In this prototype toggles are purely visual (no logic)
+    document.querySelectorAll('.toggle').forEach(t => {
+      t.addEventListener('click', () => {
+        t.classList.toggle('on');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Day Dashboard</title>
+    <link rel="stylesheet" href="./day.css" />
+  </head>
+  <body>
+    <div class="day-shell">
+      <header class="topbar glass">
+        <div class="title-block">
+          <div class="title">Day Dashboard</div>
+          <div id="metaBar" class="meta"></div>
+        </div>
+        <div class="controls">
+          <input id="dateInput" class="input" type="date" />
+          <button id="todayBtn" class="button" type="button">Today</button>
+          <a class="button ghost" href="./index.html">Calendar</a>
+          <button class="button ghost" type="button" data-theme-toggle>Light</button>
+        </div>
+      </header>
+
+      <main id="cards" class="card-grid"></main>
+    </div>
+
+    <script type="module" src="./day.js"></script>
+    <script type="module" src="./theme.js"></script>
+  </body>
+</html>

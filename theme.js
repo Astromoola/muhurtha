@@ -3,18 +3,15 @@ const root = document.documentElement;
 const toggleButtons = () => document.querySelectorAll("[data-theme-toggle]");
 
 function getPreferredTheme() {
-  const stored = localStorage.getItem(THEME_KEY);
-  if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches
-    ? "light"
-    : "dark";
+  return "dark";
 }
 
 function applyTheme(theme) {
-  root.setAttribute("data-theme", theme);
-  localStorage.setItem(THEME_KEY, theme);
+  const finalTheme = "dark";
+  root.setAttribute("data-theme", finalTheme);
+  localStorage.setItem(THEME_KEY, finalTheme);
   toggleButtons().forEach((btn) => {
-    btn.textContent = theme === "dark" ? "Light" : "Dark";
+    btn.textContent = "Dark";
   });
 }
 
@@ -23,8 +20,7 @@ function initThemeToggle() {
   applyTheme(theme);
   toggleButtons().forEach((btn) => {
     btn.addEventListener("click", () => {
-      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      applyTheme(next);
+      applyTheme("dark");
     });
   });
 }

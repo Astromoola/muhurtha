@@ -71,9 +71,7 @@ body {
   line-height: var(--line-body);
 }
 
-:root[data-theme="light"] body {
-  font-weight: 500;
-}
+/* Light theme disabled for now */
 
 body.timeline-page {
   --font-h1: 22px;

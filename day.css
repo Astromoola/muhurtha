@@ -31,20 +31,7 @@
   --font-family-base: "Inter", system-ui, -apple-system, sans-serif;
 }
 
-:root[data-theme="light"] {
-  --bg-1: #f7f9fb;
-  --bg-2: #f2f5fb;
-  --bg-3: #eef2f9;
-  --bg-grad-1: rgba(59, 130, 246, 0.08);
-  --bg-grad-2: rgba(16, 185, 129, 0.08);
-  --glass: rgba(255, 255, 255, 0.9);
-  --glass-strong: rgba(255, 255, 255, 0.95);
-  --border: rgba(15, 23, 42, 0.12);
-  --text: #0f172a;
-  --muted: #64748b;
-  --accent: #2563eb;
-  --shadow: 0 24px 50px rgba(15, 23, 42, 0.08);
-}
+/* Light theme disabled for now */
 
 * {
   box-sizing: border-box;

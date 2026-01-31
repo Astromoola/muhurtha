@@ -849,6 +849,13 @@ function renderPlanetCard(day) {
       const planetsWrap = document.createElement("div");
       planetsWrap.className = "kundali-planets";
       const planets = signToPlanets[sign] || [];
+      if (planets.length >= 7) {
+        cell.classList.add("packed");
+        planetsWrap.classList.add("packed");
+      } else if (planets.length >= 5) {
+        cell.classList.add("crowded");
+        planetsWrap.classList.add("crowded");
+      }
       if (!planets.length) {
         const empty = document.createElement("span");
         empty.className = "kundali-empty";

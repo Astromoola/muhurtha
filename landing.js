@@ -24,6 +24,11 @@ const selectedFilters = {
   yoga: new Set(),
   karana: new Set(),
   muhurta: new Set(),
+  ritu: new Set(),
+  ayana: new Set(),
+  solarMonth: new Set(),
+  lunarAmanta: new Set(),
+  lunarPurnimanta: new Set(),
   planetNakshatra: new Set(),
   planetMotion: new Set(),
   planetCombust: new Set(),
@@ -36,6 +41,11 @@ const filterModes = {
   yoga: "or",
   karana: "or",
   muhurta: "or",
+  ritu: "or",
+  ayana: "or",
+  solarMonth: "or",
+  lunarAmanta: "or",
+  lunarPurnimanta: "or",
   planetNakshatra: "or",
   planetMotion: "or",
   planetCombust: "or",
@@ -266,6 +276,11 @@ function renderCalendar() {
       const nak = getValueAtJd("nakshatra", sunriseJd);
       const yoga = getValueAtJd("yoga", sunriseJd);
       const karana = getValueAtJd("karana", sunriseJd);
+      const ritu = getValueAtJd("ritu", sunriseJd);
+      const ayana = getValueAtJd("ayana", sunriseJd);
+      const solarMonth = getValueAtJd("solar_month", sunriseJd);
+      const lunarAmanta = getValueAtJd("lunar_month_amanta", sunriseJd);
+      const lunarPurnimanta = getValueAtJd("lunar_month_poornimanta", sunriseJd);
       const endJd = sunriseJd + 1;
       const muhurtaKeys = collectMuhurtaKeys(sunriseJd, endJd);
       const planetNakshatraKeys = new Set();
@@ -298,6 +313,11 @@ function renderCalendar() {
         nakshatra: nak,
         yoga,
         karana,
+        ritu,
+        ayana,
+        solarMonth,
+        lunarAmanta,
+        lunarPurnimanta,
         muhurtaKeys,
         planetNakshatraKeys,
         planetMotionKeys,
@@ -400,6 +420,23 @@ function buildFilterGroups() {
     { key: "nakshatra", title: "Nakshatra", values: uniqueValues(data.lookups?.nakshatra || []) },
     { key: "yoga", title: "Yoga", values: uniqueValues(data.lookups?.yoga || []) },
     { key: "karana", title: "Karana", values: uniqueValues(data.lookups?.karana || []) },
+    { key: "ritu", title: "Ritu", values: uniqueValues(data.lookups?.ritu || []) },
+    { key: "ayana", title: "Ayana", values: uniqueValues(data.lookups?.ayana || []) },
+    {
+      key: "solarMonth",
+      title: "Solar Month",
+      values: uniqueValues(Object.values(data.band_names?.solar_month || {})),
+    },
+    {
+      key: "lunarAmanta",
+      title: "Lunar Month (Amanta)",
+      values: uniqueValues(Object.values(data.band_names?.lunar_month_amanta || {})),
+    },
+    {
+      key: "lunarPurnimanta",
+      title: "Lunar Month (Purnimanta)",
+      values: uniqueValues(Object.values(data.band_names?.lunar_month_poornimanta || {})),
+    },
   ];
 
   const makeModeToggle = (groupKey) => {
@@ -646,6 +683,11 @@ function applyFilters() {
       matchSingle(meta.nakshatra, selectedFilters.nakshatra, filterModes.nakshatra) &&
       matchSingle(meta.yoga, selectedFilters.yoga, filterModes.yoga) &&
       matchSingle(meta.karana, selectedFilters.karana, filterModes.karana) &&
+      matchSingle(meta.ritu, selectedFilters.ritu, filterModes.ritu) &&
+      matchSingle(meta.ayana, selectedFilters.ayana, filterModes.ayana) &&
+      matchSingle(meta.solarMonth, selectedFilters.solarMonth, filterModes.solarMonth) &&
+      matchSingle(meta.lunarAmanta, selectedFilters.lunarAmanta, filterModes.lunarAmanta) &&
+      matchSingle(meta.lunarPurnimanta, selectedFilters.lunarPurnimanta, filterModes.lunarPurnimanta) &&
       matchSet(meta.muhurtaKeys, selectedFilters.muhurta, filterModes.muhurta) &&
       matchSet(meta.planetNakshatraKeys, selectedFilters.planetNakshatra, filterModes.planetNakshatra) &&
       matchSet(meta.planetMotionKeys, selectedFilters.planetMotion, filterModes.planetMotion) &&
@@ -675,6 +717,11 @@ function renderActiveFilters() {
   addEntries("Nakshatra", Array.from(selectedFilters.nakshatra), filterModes.nakshatra);
   addEntries("Yoga", Array.from(selectedFilters.yoga), filterModes.yoga);
   addEntries("Karana", Array.from(selectedFilters.karana), filterModes.karana);
+  addEntries("Ritu", Array.from(selectedFilters.ritu), filterModes.ritu);
+  addEntries("Ayana", Array.from(selectedFilters.ayana), filterModes.ayana);
+  addEntries("Solar Month", Array.from(selectedFilters.solarMonth), filterModes.solarMonth);
+  addEntries("Lunar Month (A)", Array.from(selectedFilters.lunarAmanta), filterModes.lunarAmanta);
+  addEntries("Lunar Month (P)", Array.from(selectedFilters.lunarPurnimanta), filterModes.lunarPurnimanta);
   addEntries(
     "Muhurta",
     Array.from(selectedFilters.muhurta).map((key) => {

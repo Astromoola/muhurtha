@@ -419,12 +419,37 @@ canvas {
   font-weight: 600;
 }
 
+.kundali-planets.crowded {
+  gap: 4px 8px;
+}
+
+.kundali-planets.packed {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
+  gap: 4px 6px;
+}
+
 .kundali-planet {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
   font-size: var(--font-md);
+}
+
+.kundali-cell.crowded .kundali-planet,
+.kundali-cell.crowded .kundali-planet-main {
+  font-size: var(--font-sm);
+}
+
+.kundali-cell.packed .kundali-planet,
+.kundali-cell.packed .kundali-planet-main {
+  font-size: var(--font-xs);
+}
+
+.kundali-cell.packed .kundali-meta {
+  font-size: 10px;
+  letter-spacing: 0.02em;
 }
 
 .kundali-flag {
@@ -523,6 +548,18 @@ canvas {
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+  }
+
+  .kundali-grid {
+    gap: 6px;
+  }
+
+  .kundali-cell {
+    padding: 6px;
+  }
+
+  .kundali-sign {
+    font-size: 10px;
   }
 }
 .card-columns {

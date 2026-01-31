@@ -66,9 +66,18 @@ body {
   font-kerning: normal;
   background: radial-gradient(circle at top, #fdfefe 0%, #f5f7fb 40%, #f0f4fb 100%);
   min-height: 100vh;
+  min-height: 100svh;
   color: var(--text);
   font-size: var(--font-body);
   line-height: var(--line-body);
+  overflow-x: hidden;
+}
+
+img,
+svg,
+canvas {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Light theme disabled for now */

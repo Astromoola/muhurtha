@@ -40,11 +40,13 @@
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100svh;
   font-family: var(--font-family-base);
   color: var(--text);
   background: radial-gradient(1200px 700px at 10% 10%, var(--bg-grad-1), transparent 60%),
     radial-gradient(900px 600px at 90% 20%, var(--bg-grad-2), transparent 55%),
     linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+  overflow-x: hidden;
 }
 
 body::before {
@@ -57,9 +59,10 @@ body::before {
 }
 
 .day-shell {
-  max-width: 1100px;
+  max-width: 1200px;
+  width: min(1200px, 100%);
   margin: 0 auto;
-  padding: var(--space-6) var(--space-4) 64px;
+  padding: clamp(16px, 3vw, 32px) clamp(16px, 3vw, 32px) 64px;
   position: relative;
   z-index: 1;
 }
@@ -126,15 +129,9 @@ body::before {
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: var(--space-4);
   align-items: start;
-}
-
-@media (max-width: 900px) {
-  .card-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 .card {
@@ -168,6 +165,13 @@ body::before {
 .table-wrap {
   width: 100%;
   overflow-x: auto;
+}
+
+img,
+svg,
+canvas {
+  max-width: 100%;
+  height: auto;
 }
 
 .table {
@@ -517,7 +521,7 @@ body::before {
 
 .card-two-col {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: var(--space-4);
   grid-column: 1 / -1;
   align-items: stretch;
@@ -544,20 +548,12 @@ body::before {
 
 .card-row {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: var(--space-4);
 }
 
 @media (max-width: 900px) {
   .card-columns {
     column-count: 1;
-  }
-
-  .card-two-col {
-    grid-template-columns: 1fr;
-  }
-
-  .card-row {
-    grid-template-columns: 1fr;
   }
 }

@@ -314,6 +314,9 @@ function renderCalendar() {
       const num = document.createElement("div");
       num.className = "day-num";
       num.textContent = String(day);
+      const weekday = document.createElement("div");
+      weekday.className = "day-weekday";
+      weekday.textContent = weekdayLabels[weekdayIndexForDateStr(dateStr)] || "";
       const times = document.createElement("div");
       times.className = "day-times";
       const sunrise = document.createElement("div");
@@ -323,7 +326,7 @@ function renderCalendar() {
       sunset.className = "day-sunset";
       sunset.textContent = `🌙 ${fmtTime(sunsetJd)}`;
       times.append(sunrise, sunset);
-      top.append(num, times);
+      top.append(num, weekday, times);
 
       const lines = document.createElement("div");
       lines.className = "day-lines";
@@ -744,6 +747,15 @@ function scrollToCurrentMonth() {
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function focusDate(dateStr) {
+  if (!calendar) return;
+  const tile = calendar.querySelector(`.day-tile[data-date="${dateStr}"]`);
+  if (!tile) return;
+  calendar.querySelectorAll(".day-tile.today-focus").forEach((el) => el.classList.remove("today-focus"));
+  tile.classList.add("today-focus");
+  tile.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+}
+
 function initYearSelect() {
   years.forEach((year) => {
     const option = document.createElement("option");
@@ -763,7 +775,17 @@ yearSelect.addEventListener("change", () => {
   loadJson(year);
 });
 
-jumpToday.addEventListener("click", scrollToCurrentMonth);
+jumpToday.addEventListener("click", () => {
+  const today = new Date();
+  const year = data?.meta?.year;
+  if (!year || today.getFullYear() !== year) {
+    scrollToCurrentMonth();
+    return;
+  }
+  const dateStr = today.toISOString().slice(0, 10);
+  scrollToCurrentMonth();
+  focusDate(dateStr);
+});
 
 filterBtn.addEventListener("click", () => {
   filterBackdrop.classList.remove("hidden");

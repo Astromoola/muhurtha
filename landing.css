@@ -145,7 +145,19 @@
   font-weight: 600;
 }
 
+.day-times {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
 .day-sunrise {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.day-sunset {
   font-size: 11px;
   color: var(--muted);
 }
@@ -168,6 +180,48 @@
   border: 1px solid rgba(148, 163, 184, 0.12);
   font-weight: 600;
   letter-spacing: 0.03em;
+}
+
+.day-line.nakshatra {
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.day-line.tithi {
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.day-line.nakshatra .day-icon {
+  width: auto;
+  height: auto;
+  font-size: 11px;
+  background: transparent;
+  border: none;
+}
+
+.day-line.tithi .day-icon {
+  width: auto;
+  height: auto;
+  font-size: 11px;
+  background: transparent;
+  border: none;
+}
+
+.day-line.nakshatra .day-text,
+.day-line.tithi .day-text {
+  font-weight: 500;
+  letter-spacing: 0;
 }
 
 .day-icon {

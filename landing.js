@@ -173,15 +173,19 @@ function computeDayWindow(dateStr) {
   const dayEndJd = dayStartJd + 1.0;
 
   let sunriseJd = dayStartJd;
+  let sunsetJd = dayStartJd + 0.5;
   const daylight = getIntervalsForBand("daylight");
   if (daylight.length) {
     const match =
       daylight.find((iv) => iv[0] >= dayStartJd && iv[0] < dayEndJd) ||
       daylight.find((iv) => iv[0] < dayEndJd && iv[1] > dayStartJd);
-    if (match) sunriseJd = match[0];
+    if (match) {
+      sunriseJd = match[0];
+      sunsetJd = match[1];
+    }
   }
 
-  return { dayStartJd, sunriseJd };
+  return { dayStartJd, sunriseJd, sunsetJd };
 }
 
 function weekdayIndexForDateStr(dateStr) {
@@ -256,7 +260,7 @@ function renderCalendar() {
 
       for (let day = 1; day <= daysInMonth; day += 1) {
         const dateStr = `${year}-${pad2(month + 1)}-${pad2(day)}`;
-      const { sunriseJd } = computeDayWindow(dateStr);
+      const { sunriseJd, sunsetJd } = computeDayWindow(dateStr);
       const vara = getValueAtJd("vara", sunriseJd);
       const tithi = getValueAtJd("tithi", sunriseJd);
       const nak = getValueAtJd("nakshatra", sunriseJd);
@@ -310,20 +314,27 @@ function renderCalendar() {
       const num = document.createElement("div");
       num.className = "day-num";
       num.textContent = String(day);
+      const times = document.createElement("div");
+      times.className = "day-times";
       const sunrise = document.createElement("div");
       sunrise.className = "day-sunrise";
-      sunrise.textContent = `Sunrise ${fmtTime(sunriseJd)}`;
-      top.append(num, sunrise);
+      sunrise.textContent = `☀ ${fmtTime(sunriseJd)}`;
+      const sunset = document.createElement("div");
+      sunset.className = "day-sunset";
+      sunset.textContent = `🌙 ${fmtTime(sunsetJd)}`;
+      times.append(sunrise, sunset);
+      top.append(num, times);
 
       const lines = document.createElement("div");
       lines.className = "day-lines";
       const items = [
-        { icon: "✨", label: "Nakshatra", value: nak },
-        { icon: "☾", label: "Tithi", value: tithi },
+        { icon: "✨", label: "Nakshatra", value: nak, className: "nakshatra" },
+        { icon: getTithiIcon(tithi), label: "Tithi", value: tithi, className: "tithi" },
       ];
       items.forEach((item) => {
         const row = document.createElement("div");
         row.className = "day-line";
+        if (item.className) row.classList.add(item.className);
         const icon = document.createElement("span");
         icon.className = "day-icon";
         icon.textContent = item.icon;
@@ -355,6 +366,15 @@ function shortValue(value) {
   const first = words[0].slice(0, 3);
   const second = words[1].slice(0, 3);
   return `${first} ${second}`.trim();
+}
+
+function getTithiIcon(tithi) {
+  const text = String(tithi || "").toLowerCase();
+  if (text.includes("amavasya")) return "🌑";
+  if (text.includes("purnima")) return "🌕";
+  if (text.includes("shukla")) return "🌔";
+  if (text.includes("krishna")) return "🌘";
+  return "☾";
 }
 
 function buildFilterGroups() {

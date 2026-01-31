@@ -1016,14 +1016,22 @@ function renderMuhurtaYogaBlock(day) {
 
 function renderMuhurtaPeriodCard(day) {
   if (!muhurtaPeriodDefs.length) return null;
-  const span = day.nextSunriseJd - day.sunriseJd;
-  if (!Number.isFinite(span) || span <= 0) return null;
-  const segment = span / muhurtaPeriodDefs.length;
+  const daySpan = day.sunsetJd - day.sunriseJd;
+  const nightSpan = day.nextSunriseJd - day.sunsetJd;
+  if (!Number.isFinite(daySpan) || !Number.isFinite(nightSpan) || daySpan <= 0 || nightSpan <= 0) {
+    return null;
+  }
+  const daySegment = daySpan / 15;
+  const nightSegment = nightSpan / 15;
   const weekday = getValueAtJd("vara", day.sunriseJd).label;
 
   const rows = muhurtaPeriodDefs.map((entry, idx) => {
-    const start = day.sunriseJd + segment * idx;
-    const end = start + segment;
+    const isDay = idx < 15;
+    const slotIndex = isDay ? idx : idx - 15;
+    const start = isDay
+      ? day.sunriseJd + daySegment * slotIndex
+      : day.sunsetJd + nightSegment * slotIndex;
+    const end = start + (isDay ? daySegment : nightSegment);
     const isException = entry.except?.includes(weekday);
     const qualityText = isException ? "Inauspicious (Exception)" : entry.quality;
     const qualityClass = isException ? "bad" : entry.type;

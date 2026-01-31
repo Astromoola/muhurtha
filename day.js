@@ -253,6 +253,23 @@ function msToJd(ms) {
   return ms / 86400000 + 2440587.5;
 }
 
+function nowJdForDay(day) {
+  const nowJd = msToJd(Date.now());
+  if (nowJd >= day.dayStartJd && nowJd < day.dayStartJd + 1) return nowJd;
+  return null;
+}
+
+function isNowBetween(nowJd, start, end) {
+  return nowJd !== null && Number.isFinite(start) && Number.isFinite(end) && start <= nowJd && nowJd < end;
+}
+
+function addNowIndicator(el) {
+  const icon = document.createElement("span");
+  icon.className = "now-indicator";
+  icon.textContent = "🕒";
+  el.appendChild(icon);
+}
+
 function toLocal(dateUtc) {
   return new Date(dateUtc.getTime() + tzHours * 3600 * 1000);
 }
@@ -580,14 +597,18 @@ function buildRangeRows(bandDay, bandNight, sunriseJd, sunsetJd, nextSunriseJd, 
   const dayRows = dayIntervals.map((iv) => ({
     name: formatIntervalLabel(bandDay, iv),
     range: fmtRange(iv[0], iv[1]),
+    startJd: iv[0],
+    endJd: iv[1],
   }));
   const nightRows = nightIntervals.map((iv) => ({
     name: formatIntervalLabel(bandNight, iv),
     range: fmtRange(iv[0], iv[1]),
+    startJd: iv[0],
+    endJd: iv[1],
   }));
 
-  while (dayRows.length < limit) dayRows.push({ name: "", range: "" });
-  while (nightRows.length < limit) nightRows.push({ name: "", range: "" });
+  while (dayRows.length < limit) dayRows.push({ name: "", range: "", startJd: null, endJd: null });
+  while (nightRows.length < limit) nightRows.push({ name: "", range: "", startJd: null, endJd: null });
 
   return { dayRows, nightRows };
 }
@@ -602,8 +623,10 @@ function buildSlotRows(band, windowStart, windowEnd) {
     name: formatIntervalLabel(band, iv),
     start: fmtTime(iv[0]),
     end: fmtTime(iv[1]),
+    startJd: iv[0],
+    endJd: iv[1],
   }));
-  while (rows.length < 8) rows.push({ name: "", start: "", end: "" });
+  while (rows.length < 8) rows.push({ name: "", start: "", end: "", startJd: null, endJd: null });
   return rows;
 }
 
@@ -617,9 +640,9 @@ function buildLagnaRows(day) {
     if (end <= start) return;
     const sign = signShortFromValue(iv[2]) || formatIntervalLabel("lagna", iv) || "--";
     const duration = formatDuration((end - start) * 24 * 60);
-    rows.push({ sign, start: fmtTime(start), end: fmtTime(end), duration });
+    rows.push({ sign, start: fmtTime(start), end: fmtTime(end), duration, startJd: start, endJd: end });
   });
-  if (!rows.length) rows.push({ sign: "--", start: "--", end: "--", duration: "--" });
+  if (!rows.length) rows.push({ sign: "--", start: "--", end: "--", duration: "--", startJd: null, endJd: null });
   return rows;
 }
 
@@ -669,6 +692,26 @@ function makeCell(tag, text, className) {
   const cell = document.createElement(tag);
   cell.textContent = text;
   if (className) cell.className = className;
+  return cell;
+}
+
+function makeTimeRangesCell(ranges, nowJd) {
+  const cell = document.createElement("td");
+  cell.className = "time multiline";
+  if (!ranges.length) {
+    cell.textContent = "--";
+    return cell;
+  }
+  ranges.forEach((range) => {
+    const line = document.createElement("div");
+    line.className = "time-line";
+    line.textContent = fmtRange(range.start, range.end);
+    if (isNowBetween(nowJd, range.start, range.end)) {
+      line.classList.add("now");
+      addNowIndicator(line);
+    }
+    cell.appendChild(line);
+  });
   return cell;
 }
 
@@ -863,12 +906,17 @@ function renderPlanetCard(day) {
 
   card.appendChild(grid);
   if (data.bands?.lagna) {
+    const nowJd = nowJdForDay(day);
     const lagnaRows = buildLagnaRows(day);
     const rows = lagnaRows.map((row) => {
       const signCell = makeCell("td", row.sign, "label");
       signCell.setAttribute("data-label", "Sign");
       const timeText = `${row.start}-${row.end} (${row.duration})`;
       const timeCell = makeCell("td", timeText, "time");
+      if (isNowBetween(nowJd, row.startJd, row.endJd)) {
+        timeCell.classList.add("now");
+        addNowIndicator(timeCell);
+      }
       timeCell.setAttribute("data-label", "Time");
       return [signCell, timeCell];
     });
@@ -941,12 +989,12 @@ function renderTransitionsCard(day) {
 }
 
 function renderWindowCard(day, title, bands) {
+  const nowJd = nowJdForDay(day);
   const rows = [];
   bands.forEach((item) => {
     if (!data.bands?.[item.band]) return;
     const ranges = getWindows(item.band, day.sunriseJd, day.nextSunriseJd);
-    const text = ranges.length ? ranges.map((r) => fmtRange(r.start, r.end)).join("\n") : "--";
-    const timeCell = makeCell("td", text, "time multiline");
+    const timeCell = makeTimeRangesCell(ranges, nowJd);
     rows.push([makeCell("td", item.label, "label"), timeCell]);
   });
   if (!rows.length) return null;
@@ -1021,6 +1069,7 @@ function renderMuhurtaPeriodCard(day) {
   if (!Number.isFinite(daySpan) || !Number.isFinite(nightSpan) || daySpan <= 0 || nightSpan <= 0) {
     return null;
   }
+  const nowJd = nowJdForDay(day);
   const daySegment = daySpan / 15;
   const nightSegment = nightSpan / 15;
   const weekday = getValueAtJd("vara", day.sunriseJd).label;
@@ -1035,9 +1084,14 @@ function renderMuhurtaPeriodCard(day) {
     const isException = entry.except?.includes(weekday);
     const qualityText = isException ? "Inauspicious (Exception)" : entry.quality;
     const qualityClass = isException ? "bad" : entry.type;
+    const timeCell = makeCell("td", fmtRange(start, end), "time");
+    if (isNowBetween(nowJd, start, end)) {
+      timeCell.classList.add("now");
+      addNowIndicator(timeCell);
+    }
     return [
       makeCell("td", String(idx + 1), "label"),
-      makeCell("td", fmtRange(start, end), "time"),
+      timeCell,
       makeCell("td", entry.name, "label"),
       makeCell("td", entry.meaning, "subtle"),
       makeCell("td", qualityText, `quality ${qualityClass}`),
@@ -1093,6 +1147,7 @@ function renderCombinedKalaCard(day) {
   ];
   if (!bands.some((band) => data.bands?.[band])) return null;
 
+  const nowJd = nowJdForDay(day);
   const kalaDay = buildSlotRows("kala_day", day.sunriseJd, day.sunsetJd);
   const kalaNight = buildSlotRows("kala_night", day.sunsetJd, day.nextSunriseJd);
   const gowriDay = buildSlotRows("gowri_day", day.sunriseJd, day.sunsetJd);
@@ -1104,15 +1159,62 @@ function renderCombinedKalaCard(day) {
   for (let i = 0; i < 8; i += 1) {
     const dayStart = pickStartTime(i, [kalaDay, gowriDay, choghDay]);
     const nightStart = pickStartTime(i, [kalaNight, gowriNight, choghNight]);
+    const dayStartCell = makeCell("td", dayStart, "time label");
+    const nightStartCell = makeCell("td", nightStart, "time label");
+
+    const gowriDayCell = makeSlotCell(gowriDay[i]?.name || "--");
+    const choghDayCell = makeSlotCell(choghDay[i]?.name || "--");
+    const kalaDayCell = makeSlotCell(kalaDay[i]?.name || "--");
+    const gowriNightCell = makeSlotCell(gowriNight[i]?.name || "--");
+    const choghNightCell = makeSlotCell(choghNight[i]?.name || "--");
+    const kalaNightCell = makeSlotCell(kalaNight[i]?.name || "--");
+
+    const dayActive =
+      isNowBetween(nowJd, gowriDay[i]?.startJd, gowriDay[i]?.endJd) ||
+      isNowBetween(nowJd, choghDay[i]?.startJd, choghDay[i]?.endJd) ||
+      isNowBetween(nowJd, kalaDay[i]?.startJd, kalaDay[i]?.endJd);
+    const nightActive =
+      isNowBetween(nowJd, gowriNight[i]?.startJd, gowriNight[i]?.endJd) ||
+      isNowBetween(nowJd, choghNight[i]?.startJd, choghNight[i]?.endJd) ||
+      isNowBetween(nowJd, kalaNight[i]?.startJd, kalaNight[i]?.endJd);
+
+    if (dayActive) {
+      dayStartCell.classList.add("now");
+      addNowIndicator(dayStartCell);
+    }
+    if (nightActive) {
+      nightStartCell.classList.add("now");
+      addNowIndicator(nightStartCell);
+    }
+
+    if (isNowBetween(nowJd, gowriDay[i]?.startJd, gowriDay[i]?.endJd)) {
+      gowriDayCell.classList.add("now");
+    }
+    if (isNowBetween(nowJd, choghDay[i]?.startJd, choghDay[i]?.endJd)) {
+      choghDayCell.classList.add("now");
+    }
+    if (isNowBetween(nowJd, kalaDay[i]?.startJd, kalaDay[i]?.endJd)) {
+      kalaDayCell.classList.add("now");
+    }
+    if (isNowBetween(nowJd, gowriNight[i]?.startJd, gowriNight[i]?.endJd)) {
+      gowriNightCell.classList.add("now");
+    }
+    if (isNowBetween(nowJd, choghNight[i]?.startJd, choghNight[i]?.endJd)) {
+      choghNightCell.classList.add("now");
+    }
+    if (isNowBetween(nowJd, kalaNight[i]?.startJd, kalaNight[i]?.endJd)) {
+      kalaNightCell.classList.add("now");
+    }
+
     rows.push([
-      makeCell("td", dayStart, "time label"),
-      makeSlotCell(gowriDay[i]?.name || "--"),
-      makeSlotCell(choghDay[i]?.name || "--"),
-      makeSlotCell(kalaDay[i]?.name || "--"),
-      makeCell("td", nightStart, "time label"),
-      makeSlotCell(gowriNight[i]?.name || "--"),
-      makeSlotCell(choghNight[i]?.name || "--"),
-      makeSlotCell(kalaNight[i]?.name || "--"),
+      dayStartCell,
+      gowriDayCell,
+      choghDayCell,
+      kalaDayCell,
+      nightStartCell,
+      gowriNightCell,
+      choghNightCell,
+      kalaNightCell,
     ]);
   }
 
@@ -1136,6 +1238,7 @@ function renderTimeSystemCards(day) {
       const card = createCard(system.title);
       const rows = [];
       const limit = system.title === "Hora" ? 12 : 8;
+      const nowJd = nowJdForDay(day);
       const entries = buildRangeRows(
         system.day,
         system.night,
@@ -1145,11 +1248,21 @@ function renderTimeSystemCards(day) {
         limit
       );
       for (let i = 0; i < limit; i += 1) {
+        const dayRangeCell = makeCell("td", entries.dayRows[i].range || "", "time");
+        if (isNowBetween(nowJd, entries.dayRows[i].startJd, entries.dayRows[i].endJd)) {
+          dayRangeCell.classList.add("now");
+          addNowIndicator(dayRangeCell);
+        }
+        const nightRangeCell = makeCell("td", entries.nightRows[i].range || "", "time");
+        if (isNowBetween(nowJd, entries.nightRows[i].startJd, entries.nightRows[i].endJd)) {
+          nightRangeCell.classList.add("now");
+          addNowIndicator(nightRangeCell);
+        }
         rows.push([
           makeCell("td", entries.dayRows[i].name || "", "label"),
-          makeCell("td", entries.dayRows[i].range || "", "time"),
+          dayRangeCell,
           makeCell("td", entries.nightRows[i].name || "", "label"),
-          makeCell("td", entries.nightRows[i].range || "", "time"),
+          nightRangeCell,
         ]);
       }
       const table = createTable(["Day", "Range", "Night", "Range"], rows, "table small");

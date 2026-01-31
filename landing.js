@@ -321,10 +321,10 @@ function renderCalendar() {
       times.className = "day-times";
       const sunrise = document.createElement("div");
       sunrise.className = "day-sunrise";
-      sunrise.textContent = `☀ ${fmtTime(sunriseJd)}`;
+      sunrise.textContent = `☀↑ ${fmtTime(sunriseJd)}`;
       const sunset = document.createElement("div");
       sunset.className = "day-sunset";
-      sunset.textContent = `🌙 ${fmtTime(sunsetJd)}`;
+      sunset.textContent = `☀↓ ${fmtTime(sunsetJd)}`;
       times.append(sunrise, sunset);
       top.append(num, weekday, times);
 

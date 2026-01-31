@@ -24,7 +24,65 @@ const selectedFilters = {
   yoga: new Set(),
   karana: new Set(),
   muhurta: new Set(),
+  planetNakshatra: new Set(),
+  planetMotion: new Set(),
+  planetCombust: new Set(),
 };
+
+const filterModes = {
+  vara: "or",
+  tithi: "or",
+  nakshatra: "or",
+  yoga: "or",
+  karana: "or",
+  muhurta: "or",
+  planetNakshatra: "or",
+  planetMotion: "or",
+  planetCombust: "or",
+};
+
+const PLANET_NAKSHATRA_BANDS = [
+  { key: "sun", label: "Sun", short: "Su", band: "sun_nakshatra" },
+  { key: "moon", label: "Moon", short: "Mo", band: "moon_nakshatra" },
+  { key: "mars", label: "Mars", short: "Ma", band: "mars_nakshatra" },
+  { key: "mercury", label: "Mercury", short: "Me", band: "mercury_nakshatra" },
+  { key: "jupiter", label: "Jupiter", short: "Ju", band: "jupiter_nakshatra" },
+  { key: "venus", label: "Venus", short: "Ve", band: "venus_nakshatra" },
+  { key: "saturn", label: "Saturn", short: "Sa", band: "saturn_nakshatra" },
+  { key: "rahu", label: "Rahu", short: "Ra", band: "rahu_nakshatra" },
+  { key: "ketu", label: "Ketu", short: "Ke", band: "ketu_nakshatra" },
+];
+
+const PLANET_MOTION_BANDS = [
+  { key: "mars", label: "Mars", short: "Ma", band: "mars_motion" },
+  { key: "mercury", label: "Mercury", short: "Me", band: "mercury_motion" },
+  { key: "jupiter", label: "Jupiter", short: "Ju", band: "jupiter_motion" },
+  { key: "venus", label: "Venus", short: "Ve", band: "venus_motion" },
+  { key: "saturn", label: "Saturn", short: "Sa", band: "saturn_motion" },
+];
+
+const PLANET_COMBUST_BANDS = [
+  { key: "mars", label: "Mars", short: "Ma", band: "mars_combust" },
+  { key: "mercury", label: "Mercury", short: "Me", band: "mercury_combust" },
+  { key: "jupiter", label: "Jupiter", short: "Ju", band: "jupiter_combust" },
+  { key: "venus", label: "Venus", short: "Ve", band: "venus_combust" },
+  { key: "saturn", label: "Saturn", short: "Sa", band: "saturn_combust" },
+];
+
+function isRetrogradeLabel(label) {
+  if (!label) return false;
+  const text = String(label).toLowerCase();
+  return text.includes("retro") || text.includes("rx");
+}
+
+function isCombustLabel(label) {
+  if (!label) return false;
+  const text = String(label).toLowerCase();
+  if (text.includes("non") && text.includes("combust")) return false;
+  if (text.includes("not") && text.includes("combust")) return false;
+  if (text.includes("no") && text.includes("combust")) return false;
+  return text.includes("combust");
+}
 
 function loadJson(year) {
   const path = `./panchanga_json/panchanga_bangalore_${year}.json`;
@@ -206,7 +264,41 @@ function renderCalendar() {
       const karana = getValueAtJd("karana", sunriseJd);
       const endJd = sunriseJd + 1;
       const muhurtaKeys = collectMuhurtaKeys(sunriseJd, endJd);
-      dayMeta.set(dateStr, { vara, tithi, nakshatra: nak, yoga, karana, muhurtaKeys });
+      const planetNakshatraKeys = new Set();
+      PLANET_NAKSHATRA_BANDS.forEach((planet) => {
+        const value = getValueAtJd(planet.band, sunriseJd);
+        if (value && value !== "--") planetNakshatraKeys.add(`${planet.key}:${value}`);
+      });
+
+      const planetMotionKeys = new Set();
+      PLANET_MOTION_BANDS.forEach((planet) => {
+        const label = getValueAtJd(planet.band, sunriseJd);
+        if (!label || label === "--") return;
+        planetMotionKeys.add(`${planet.key}:${isRetrogradeLabel(label) ? "retro" : "direct"}`);
+      });
+
+      const planetCombustKeys = new Set();
+      PLANET_COMBUST_BANDS.forEach((planet) => {
+        const interval = getIntervalContainingJd(planet.band, sunriseJd);
+        if (!interval) {
+          planetCombustKeys.add(`${planet.key}:clear`);
+          return;
+        }
+        const label = formatIntervalLabel(planet.band, interval);
+        planetCombustKeys.add(`${planet.key}:${isCombustLabel(label) ? "combust" : "clear"}`);
+      });
+
+      dayMeta.set(dateStr, {
+        vara,
+        tithi,
+        nakshatra: nak,
+        yoga,
+        karana,
+        muhurtaKeys,
+        planetNakshatraKeys,
+        planetMotionKeys,
+        planetCombustKeys,
+      });
 
       const tile = document.createElement("a");
       tile.className = "day-tile";
@@ -269,17 +361,62 @@ function buildFilterGroups() {
   if (!filterGroups || !data) return;
   filterGroups.innerHTML = "";
 
+  const uniqueValues = (values) => {
+    const seen = new Set();
+    return values.filter((value) => {
+      if (!value || value === "--") return false;
+      if (seen.has(value)) return false;
+      seen.add(value);
+      return true;
+    });
+  };
+
   const groups = [
-    { key: "tithi", title: "Tithi", values: data.lookups?.tithi || [] },
-    { key: "vara", title: "Vara", values: data.lookups?.vara || [] },
-    { key: "nakshatra", title: "Nakshatra", values: data.lookups?.nakshatra || [] },
-    { key: "yoga", title: "Yoga", values: data.lookups?.yoga || [] },
-    { key: "karana", title: "Karana", values: data.lookups?.karana || [] },
+    { key: "tithi", title: "Tithi", values: uniqueValues(data.lookups?.tithi || []) },
+    { key: "vara", title: "Vara", values: uniqueValues(data.lookups?.vara || []) },
+    { key: "nakshatra", title: "Nakshatra", values: uniqueValues(data.lookups?.nakshatra || []) },
+    { key: "yoga", title: "Yoga", values: uniqueValues(data.lookups?.yoga || []) },
+    { key: "karana", title: "Karana", values: uniqueValues(data.lookups?.karana || []) },
   ];
+
+  const makeModeToggle = (groupKey) => {
+    const wrap = document.createElement("div");
+    wrap.className = "filter-mode";
+    const anyBtn = document.createElement("button");
+    anyBtn.type = "button";
+    anyBtn.className = "filter-mode-button";
+    anyBtn.textContent = "Any";
+    const allBtn = document.createElement("button");
+    allBtn.type = "button";
+    allBtn.className = "filter-mode-button";
+    allBtn.textContent = "All";
+    const sync = () => {
+      const mode = filterModes[groupKey] || "or";
+      anyBtn.classList.toggle("active", mode === "or");
+      allBtn.classList.toggle("active", mode === "and");
+    };
+    anyBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      filterModes[groupKey] = "or";
+      sync();
+      applyFilters();
+    });
+    allBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+      filterModes[groupKey] = "and";
+      sync();
+      applyFilters();
+    });
+    wrap.append(anyBtn, allBtn);
+    sync();
+    return wrap;
+  };
 
   groups.forEach((group) => {
     const wrap = document.createElement("div");
     wrap.className = "filter-group collapsed";
+    const header = document.createElement("div");
+    header.className = "filter-group-header";
     const toggle = document.createElement("button");
     toggle.type = "button";
     toggle.className = "filter-group-toggle";
@@ -291,6 +428,7 @@ function buildFilterGroups() {
     chevron.textContent = "▾";
     toggle.append(title, chevron);
     toggle.addEventListener("click", () => wrap.classList.toggle("collapsed"));
+    header.append(toggle, makeModeToggle(group.key));
     const options = document.createElement("div");
     options.className = "filter-options";
     group.values.forEach((value) => {
@@ -301,12 +439,118 @@ function buildFilterGroups() {
       chip.addEventListener("click", () => toggleFilter(group.key, value, chip));
       options.appendChild(chip);
     });
-    wrap.append(toggle, options);
+    wrap.append(header, options);
     filterGroups.appendChild(wrap);
   });
 
+  const planetNakGroup = document.createElement("div");
+  planetNakGroup.className = "filter-group collapsed";
+  const planetNakHeader = document.createElement("div");
+  planetNakHeader.className = "filter-group-header";
+  const planetNakToggle = document.createElement("button");
+  planetNakToggle.type = "button";
+  planetNakToggle.className = "filter-group-toggle";
+  const planetNakTitle = document.createElement("div");
+  planetNakTitle.className = "filter-group-title";
+  planetNakTitle.textContent = "Planet Nakshatra";
+  const planetNakChevron = document.createElement("span");
+  planetNakChevron.className = "chevron";
+  planetNakChevron.textContent = "▾";
+  planetNakToggle.append(planetNakTitle, planetNakChevron);
+  planetNakToggle.addEventListener("click", () => planetNakGroup.classList.toggle("collapsed"));
+  planetNakHeader.append(planetNakToggle, makeModeToggle("planetNakshatra"));
+  const planetNakOptions = document.createElement("div");
+  planetNakOptions.className = "filter-options";
+  const nakshatras = uniqueValues(data.lookups?.nakshatra || []);
+  PLANET_NAKSHATRA_BANDS.forEach((planet) => {
+    nakshatras.forEach((nak) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "filter-chip";
+      chip.textContent = `${planet.short} · ${nak}`;
+      chip.addEventListener("click", () => toggleFilter("planetNakshatra", `${planet.key}:${nak}`, chip));
+      planetNakOptions.appendChild(chip);
+    });
+  });
+  planetNakGroup.append(planetNakHeader, planetNakOptions);
+  filterGroups.appendChild(planetNakGroup);
+
+  const planetMotionGroup = document.createElement("div");
+  planetMotionGroup.className = "filter-group collapsed";
+  const planetMotionHeader = document.createElement("div");
+  planetMotionHeader.className = "filter-group-header";
+  const planetMotionToggle = document.createElement("button");
+  planetMotionToggle.type = "button";
+  planetMotionToggle.className = "filter-group-toggle";
+  const planetMotionTitle = document.createElement("div");
+  planetMotionTitle.className = "filter-group-title";
+  planetMotionTitle.textContent = "Planet Motion";
+  const planetMotionChevron = document.createElement("span");
+  planetMotionChevron.className = "chevron";
+  planetMotionChevron.textContent = "▾";
+  planetMotionToggle.append(planetMotionTitle, planetMotionChevron);
+  planetMotionToggle.addEventListener("click", () => planetMotionGroup.classList.toggle("collapsed"));
+  planetMotionHeader.append(planetMotionToggle, makeModeToggle("planetMotion"));
+  const planetMotionOptions = document.createElement("div");
+  planetMotionOptions.className = "filter-options";
+  PLANET_MOTION_BANDS.forEach((planet) => {
+    [
+      { key: "direct", label: "Direct" },
+      { key: "retro", label: "Retro" },
+    ].forEach((state) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = `filter-chip ${state.key === "retro" ? "bad" : "good"}`;
+      chip.textContent = `${planet.short} · ${state.label}`;
+      chip.addEventListener("click", () =>
+        toggleFilter("planetMotion", `${planet.key}:${state.key}`, chip)
+      );
+      planetMotionOptions.appendChild(chip);
+    });
+  });
+  planetMotionGroup.append(planetMotionHeader, planetMotionOptions);
+  filterGroups.appendChild(planetMotionGroup);
+
+  const planetCombustGroup = document.createElement("div");
+  planetCombustGroup.className = "filter-group collapsed";
+  const planetCombustHeader = document.createElement("div");
+  planetCombustHeader.className = "filter-group-header";
+  const planetCombustToggle = document.createElement("button");
+  planetCombustToggle.type = "button";
+  planetCombustToggle.className = "filter-group-toggle";
+  const planetCombustTitle = document.createElement("div");
+  planetCombustTitle.className = "filter-group-title";
+  planetCombustTitle.textContent = "Planet Combust";
+  const planetCombustChevron = document.createElement("span");
+  planetCombustChevron.className = "chevron";
+  planetCombustChevron.textContent = "▾";
+  planetCombustToggle.append(planetCombustTitle, planetCombustChevron);
+  planetCombustToggle.addEventListener("click", () => planetCombustGroup.classList.toggle("collapsed"));
+  planetCombustHeader.append(planetCombustToggle, makeModeToggle("planetCombust"));
+  const planetCombustOptions = document.createElement("div");
+  planetCombustOptions.className = "filter-options";
+  PLANET_COMBUST_BANDS.forEach((planet) => {
+    [
+      { key: "clear", label: "Clear", className: "good" },
+      { key: "combust", label: "Combust", className: "bad" },
+    ].forEach((state) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = `filter-chip ${state.className}`;
+      chip.textContent = `${planet.short} · ${state.label}`;
+      chip.addEventListener("click", () =>
+        toggleFilter("planetCombust", `${planet.key}:${state.key}`, chip)
+      );
+      planetCombustOptions.appendChild(chip);
+    });
+  });
+  planetCombustGroup.append(planetCombustHeader, planetCombustOptions);
+  filterGroups.appendChild(planetCombustGroup);
+
   const muhurtaGroup = document.createElement("div");
   muhurtaGroup.className = "filter-group collapsed";
+  const muhurtaHeader = document.createElement("div");
+  muhurtaHeader.className = "filter-group-header";
   const muhurtaToggle = document.createElement("button");
   muhurtaToggle.type = "button";
   muhurtaToggle.className = "filter-group-toggle";
@@ -318,6 +562,7 @@ function buildFilterGroups() {
   muhurtaChevron.textContent = "▾";
   muhurtaToggle.append(muhurtaTitle, muhurtaChevron);
   muhurtaToggle.addEventListener("click", () => muhurtaGroup.classList.toggle("collapsed"));
+  muhurtaHeader.append(muhurtaToggle, makeModeToggle("muhurta"));
   const muhurtaOptions = document.createElement("div");
   muhurtaOptions.className = "filter-options";
   ["muhurta_auspicious", "muhurta_inauspicious"].forEach((band) => {
@@ -332,7 +577,7 @@ function buildFilterGroups() {
       muhurtaOptions.appendChild(chip);
     });
   });
-  muhurtaGroup.append(muhurtaToggle, muhurtaOptions);
+  muhurtaGroup.append(muhurtaHeader, muhurtaOptions);
   filterGroups.appendChild(muhurtaGroup);
 }
 
@@ -360,14 +605,28 @@ function applyFilters() {
       return;
     }
     const meta = dayMeta.get(dateStr);
+    const matchSingle = (value, set, mode) => {
+      if (set.size === 0) return true;
+      if (mode === "and") return set.size === 1 && set.has(value);
+      return set.has(value);
+    };
+    const matchSet = (metaSet, set, mode) => {
+      if (set.size === 0) return true;
+      if (mode === "and") {
+        return Array.from(set).every((key) => metaSet.has(key));
+      }
+      return Array.from(set).some((key) => metaSet.has(key));
+    };
     const match =
-      (selectedFilters.tithi.size === 0 || selectedFilters.tithi.has(meta.tithi)) &&
-      (selectedFilters.vara.size === 0 || selectedFilters.vara.has(meta.vara)) &&
-      (selectedFilters.nakshatra.size === 0 || selectedFilters.nakshatra.has(meta.nakshatra)) &&
-      (selectedFilters.yoga.size === 0 || selectedFilters.yoga.has(meta.yoga)) &&
-      (selectedFilters.karana.size === 0 || selectedFilters.karana.has(meta.karana)) &&
-      (selectedFilters.muhurta.size === 0 ||
-        Array.from(selectedFilters.muhurta).some((key) => meta.muhurtaKeys.has(key)));
+      matchSingle(meta.tithi, selectedFilters.tithi, filterModes.tithi) &&
+      matchSingle(meta.vara, selectedFilters.vara, filterModes.vara) &&
+      matchSingle(meta.nakshatra, selectedFilters.nakshatra, filterModes.nakshatra) &&
+      matchSingle(meta.yoga, selectedFilters.yoga, filterModes.yoga) &&
+      matchSingle(meta.karana, selectedFilters.karana, filterModes.karana) &&
+      matchSet(meta.muhurtaKeys, selectedFilters.muhurta, filterModes.muhurta) &&
+      matchSet(meta.planetNakshatraKeys, selectedFilters.planetNakshatra, filterModes.planetNakshatra) &&
+      matchSet(meta.planetMotionKeys, selectedFilters.planetMotion, filterModes.planetMotion) &&
+      matchSet(meta.planetCombustKeys, selectedFilters.planetCombust, filterModes.planetCombust);
     tile.classList.toggle("hidden", !match);
   });
 
@@ -383,21 +642,50 @@ function renderActiveFilters() {
   if (!activeFilters) return;
   activeFilters.innerHTML = "";
   const entries = [];
-  const addEntries = (label, values) => {
-    values.forEach((value) => entries.push({ label, value }));
+  const addEntries = (label, values, mode) => {
+    const modeLabel = mode === "and" && values.length > 1 ? " (All)" : "";
+    values.forEach((value) => entries.push({ label: `${label}${modeLabel}`, value }));
   };
 
-  addEntries("Vara", Array.from(selectedFilters.vara));
-  addEntries("Tithi", Array.from(selectedFilters.tithi));
-  addEntries("Nakshatra", Array.from(selectedFilters.nakshatra));
-  addEntries("Yoga", Array.from(selectedFilters.yoga));
-  addEntries("Karana", Array.from(selectedFilters.karana));
+  addEntries("Vara", Array.from(selectedFilters.vara), filterModes.vara);
+  addEntries("Tithi", Array.from(selectedFilters.tithi), filterModes.tithi);
+  addEntries("Nakshatra", Array.from(selectedFilters.nakshatra), filterModes.nakshatra);
+  addEntries("Yoga", Array.from(selectedFilters.yoga), filterModes.yoga);
+  addEntries("Karana", Array.from(selectedFilters.karana), filterModes.karana);
   addEntries(
     "Muhurta",
     Array.from(selectedFilters.muhurta).map((key) => {
       const [band, id] = key.split(":");
       return bandNames?.[band]?.[id] || key;
-    })
+    }),
+    filterModes.muhurta
+  );
+  addEntries(
+    "Planet Nakshatra",
+    Array.from(selectedFilters.planetNakshatra).map((key) => {
+      const [planet, value] = key.split(":");
+      const meta = PLANET_NAKSHATRA_BANDS.find((p) => p.key === planet);
+      return meta ? `${meta.short} · ${value}` : key;
+    }),
+    filterModes.planetNakshatra
+  );
+  addEntries(
+    "Planet Motion",
+    Array.from(selectedFilters.planetMotion).map((key) => {
+      const [planet, value] = key.split(":");
+      const meta = PLANET_MOTION_BANDS.find((p) => p.key === planet);
+      return meta ? `${meta.short} · ${value}` : key;
+    }),
+    filterModes.planetMotion
+  );
+  addEntries(
+    "Planet Combust",
+    Array.from(selectedFilters.planetCombust).map((key) => {
+      const [planet, value] = key.split(":");
+      const meta = PLANET_COMBUST_BANDS.find((p) => p.key === planet);
+      return meta ? `${meta.short} · ${value}` : key;
+    }),
+    filterModes.planetCombust
   );
 
   if (!entries.length) {
@@ -471,7 +759,15 @@ filterBackdrop.addEventListener("click", (event) => {
 
 filterClear.addEventListener("click", () => {
   Object.values(selectedFilters).forEach((set) => set.clear());
+  Object.keys(filterModes).forEach((key) => {
+    filterModes[key] = "or";
+  });
   filterGroups.querySelectorAll(".filter-chip.active").forEach((chip) => chip.classList.remove("active"));
+  filterGroups.querySelectorAll(".filter-mode-button").forEach((btn) => btn.classList.remove("active"));
+  filterGroups.querySelectorAll(".filter-mode").forEach((wrap) => {
+    const buttons = wrap.querySelectorAll(".filter-mode-button");
+    if (buttons[0]) buttons[0].classList.add("active");
+  });
   applyFilters();
 });
 

@@ -1264,11 +1264,12 @@ function loadData(citySlug = state.currentCitySlug, year = state.currentYear) {
       selectedYogas.clear();
       toggleYogaMenu(false);
       updateYogaTriggerLabel();
-      if (heroTitleEl) heroTitleEl.textContent = `${state.data.meta?.city_name || "City"} Panchanga`;
+      if (heroTitleEl) heroTitleEl.textContent = "Panchanga Builder";
       if (heroMetaEl) {
+        const city = state.data.meta?.city_name || "City";
         const tz = state.data.meta?.tz_name || "Timezone";
         const yearLabel = state.data.meta?.year ? `• ${state.data.meta.year}` : "";
-        heroMetaEl.textContent = `${tz} ${yearLabel}`.trim();
+        heroMetaEl.textContent = `${city} • ${tz} ${yearLabel}`.trim();
       }
       const year = state.data.meta?.year || new Date().getFullYear();
       const today = new Date();

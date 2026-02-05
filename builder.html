@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Build custom muhurtha windows with full Panchanga filters and export to calendar or PDF." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Panchanga Builder" />
+    <meta property="og:description" content="Build custom muhurtha windows with full Panchanga filters." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#0b1220" />
+    <title>Panchanga Builder</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' rx='12' fill='%23182742'/%3E%3Ctext x='32' y='42' font-size='36' text-anchor='middle' fill='%23ffffff' font-family='Arial'%3E*%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./day.css" />
+    <link rel="stylesheet" href="./builder.css" />
+  </head>
+  <body>
+    <div class="day-shell">
+      <header class="topbar glass">
+        <div class="title-block">
+          <div class="title">Panchanga Builder</div>
+          <div id="builderMeta" class="meta">Loading city…</div>
+        </div>
+        <div class="controls">
+          <label class="control-block">
+            <span>Year</span>
+            <select id="yearSelect" class="input"></select>
+          </label>
+          <label class="control-block">
+            <span>From</span>
+            <input id="fromDate" class="input" type="date" />
+          </label>
+          <label class="control-block">
+            <span>To</span>
+            <input id="toDate" class="input" type="date" />
+          </label>
+          <label class="control-block">
+            <span>Kundli</span>
+            <select id="kundliMode" class="input">
+              <option value="off">Off</option>
+              <option value="sunrise">Sunrise</option>
+              <option value="slots">Each slot</option>
+            </select>
+          </label>
+          <div class="quick-range" aria-label="Quick ranges">
+            <button class="button ghost small" type="button" data-range="3m">3 months</button>
+            <button class="button ghost small" type="button" data-range="6m">6 months</button>
+            <button class="button ghost small" type="button" data-range="year">Year end</button>
+          </div>
+          <button id="applyBtn" class="button" type="button">Apply</button>
+          <button id="clearBtn" class="button ghost" type="button">Clear</button>
+          <button id="exportIcs" class="button ghost" type="button">Export .ics</button>
+          <button id="exportPdf" class="button ghost" type="button">Export PDF</button>
+          <a class="button ghost" href="./index.html">Calendar</a>
+        </div>
+      </header>
+
+      <div class="card-grid">
+        <section class="card builder-panel">
+          <div class="card-title">Filters</div>
+          <div class="builder-subtitle">Pick any combination. Use Any/All to control matching.</div>
+
+          <label class="output-chip"><input type="checkbox" id="strictMatch" />Match filters at time</label>
+
+          <div id="filterGroups" class="filter-groups"></div>
+        </section>
+
+        <section class="card builder-panel">
+          <div class="card-title">Matching Windows</div>
+          <div id="resultsMeta" class="builder-subtitle">Select filters and apply.</div>
+          <div id="results" class="results"></div>
+        </section>
+      </div>
+    </div>
+
+    <script type="module" src="./builder.js"></script>
+    <script type="module" src="./theme.js"></script>
+  </body>
+</html>

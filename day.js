@@ -116,6 +116,16 @@ const sunriseBands = [
   { band: "ayana", label: "Ayana" },
 ];
 
+const lunarMonthTypeBands = {
+  lunar_month_amanta: "lunar_month_amanta_type",
+  lunar_month_poornimanta: "lunar_month_poornimanta_type",
+};
+
+const lunarMonthLostBands = {
+  lunar_month_amanta: "lunar_month_amanta_lost",
+  lunar_month_poornimanta: "lunar_month_poornimanta_lost",
+};
+
 const transitionBands = [
   "tithi",
   "nakshatra",
@@ -396,7 +406,7 @@ function resolveSignColor(band, valueInt) {
 
 function resolveLunarMonthColor(band, valueInt) {
   if (!valueInt) return null;
-  if (band.startsWith("lunar_month")) {
+  if (band.startsWith("lunar_month") && !band.includes("_type") && !band.includes("_lost")) {
     const idx = valueInt - 1;
     if (idx >= 0 && idx < lunarMonthNakIndex.length) {
       const nak = lunarMonthNakIndex[idx];
@@ -495,6 +505,25 @@ function getValueAtJd(band, jd) {
   const interval = getIntervalContainingJd(band, jd);
   if (!interval) return { label: "--", valueInt: null };
   return { label: formatIntervalLabel(band, interval), valueInt: interval[2] };
+}
+
+function getLunarMonthWithType(band, jd) {
+  const base = getValueAtJd(band, jd);
+  if (!base || !base.label || base.label === "--") return base;
+  const typeBand = lunarMonthTypeBands[band];
+  if (!typeBand || !data?.bands?.[typeBand]) return base;
+  const typeValue = getValueAtJd(typeBand, jd);
+  const typeLabel = typeValue.label && typeValue.label !== "--" ? typeValue.label : "";
+  if (!typeLabel || typeLabel.toLowerCase() === "regular") return base;
+  let suffix = typeLabel;
+  const lostBand = lunarMonthLostBands[band];
+  if (lostBand && data?.bands?.[lostBand]) {
+    const lost = getValueAtJd(lostBand, jd);
+    if (lost.label && lost.label !== "--") {
+      suffix = `${suffix} · Lost ${lost.label}`;
+    }
+  }
+  return { ...base, label: `${base.label} (${suffix})` };
 }
 
 function getTransitions(band, startJd, endJd) {
@@ -759,7 +788,9 @@ function renderSunriseCard(day) {
   flow.className = "sunrise-flow";
   sunriseBands.forEach((item) => {
     if (!data.bands?.[item.band]) return;
-    const value = getValueAtJd(item.band, day.sunriseJd);
+    const value = item.band.startsWith("lunar_month")
+      ? getLunarMonthWithType(item.band, day.sunriseJd)
+      : getValueAtJd(item.band, day.sunriseJd);
     const color = resolveColor(item.band, value.label, value.valueInt);
 
     const pill = document.createElement("div");

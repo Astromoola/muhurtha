@@ -19,6 +19,10 @@ export const bandColors = {
   lagna: "#14b8a6",
   lunar_month_amanta: "#f97316",
   lunar_month_poornimanta: "#f97316",
+  lunar_month_amanta_type: "#f97316",
+  lunar_month_poornimanta_type: "#f97316",
+  lunar_month_amanta_lost: "#f97316",
+  lunar_month_poornimanta_lost: "#f97316",
   solar_month: "#f43f5e",
   // Kala Vela (planetary sons/upagrahas)
   kala_day: "#c084fc",

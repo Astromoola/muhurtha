@@ -29,6 +29,8 @@ const selectedFilters = {
   solarMonth: new Set(),
   lunarAmanta: new Set(),
   lunarPurnimanta: new Set(),
+  lunarAmantaType: new Set(),
+  lunarPurnimantaType: new Set(),
   planetNakshatra: new Set(),
   planetMotion: new Set(),
   planetCombust: new Set(),
@@ -46,6 +48,8 @@ const filterModes = {
   solarMonth: "or",
   lunarAmanta: "or",
   lunarPurnimanta: "or",
+  lunarAmantaType: "or",
+  lunarPurnimantaType: "or",
   planetNakshatra: "or",
   planetMotion: "or",
   planetCombust: "or",
@@ -281,6 +285,8 @@ function renderCalendar() {
       const solarMonth = getValueAtJd("solar_month", sunriseJd);
       const lunarAmanta = getValueAtJd("lunar_month_amanta", sunriseJd);
       const lunarPurnimanta = getValueAtJd("lunar_month_poornimanta", sunriseJd);
+      const lunarAmantaType = getValueAtJd("lunar_month_amanta_type", sunriseJd);
+      const lunarPurnimantaType = getValueAtJd("lunar_month_poornimanta_type", sunriseJd);
       const endJd = sunriseJd + 1;
       const muhurtaKeys = collectMuhurtaKeys(sunriseJd, endJd);
       const planetNakshatraKeys = new Set();
@@ -318,6 +324,8 @@ function renderCalendar() {
         solarMonth,
         lunarAmanta,
         lunarPurnimanta,
+        lunarAmantaType,
+        lunarPurnimantaType,
         muhurtaKeys,
         planetNakshatraKeys,
         planetMotionKeys,
@@ -437,7 +445,17 @@ function buildFilterGroups() {
       title: "Lunar Month (Purnimanta)",
       values: uniqueValues(Object.values(data.band_names?.lunar_month_poornimanta || {})),
     },
-  ];
+    {
+      key: "lunarAmantaType",
+      title: "Maasa Type (Amanta)",
+      values: uniqueValues(Object.values(data.band_names?.lunar_month_amanta_type || {})),
+    },
+    {
+      key: "lunarPurnimantaType",
+      title: "Maasa Type (Purnimanta)",
+      values: uniqueValues(Object.values(data.band_names?.lunar_month_poornimanta_type || {})),
+    },
+  ].filter((group) => group.values && group.values.length);
 
   const makeModeToggle = (groupKey) => {
     const wrap = document.createElement("div");
@@ -688,6 +706,8 @@ function applyFilters() {
       matchSingle(meta.solarMonth, selectedFilters.solarMonth, filterModes.solarMonth) &&
       matchSingle(meta.lunarAmanta, selectedFilters.lunarAmanta, filterModes.lunarAmanta) &&
       matchSingle(meta.lunarPurnimanta, selectedFilters.lunarPurnimanta, filterModes.lunarPurnimanta) &&
+      matchSingle(meta.lunarAmantaType, selectedFilters.lunarAmantaType, filterModes.lunarAmantaType) &&
+      matchSingle(meta.lunarPurnimantaType, selectedFilters.lunarPurnimantaType, filterModes.lunarPurnimantaType) &&
       matchSet(meta.muhurtaKeys, selectedFilters.muhurta, filterModes.muhurta) &&
       matchSet(meta.planetNakshatraKeys, selectedFilters.planetNakshatra, filterModes.planetNakshatra) &&
       matchSet(meta.planetMotionKeys, selectedFilters.planetMotion, filterModes.planetMotion) &&
@@ -722,6 +742,8 @@ function renderActiveFilters() {
   addEntries("Solar Month", Array.from(selectedFilters.solarMonth), filterModes.solarMonth);
   addEntries("Lunar Month (A)", Array.from(selectedFilters.lunarAmanta), filterModes.lunarAmanta);
   addEntries("Lunar Month (P)", Array.from(selectedFilters.lunarPurnimanta), filterModes.lunarPurnimanta);
+  addEntries("Maasa Type (A)", Array.from(selectedFilters.lunarAmantaType), filterModes.lunarAmantaType);
+  addEntries("Maasa Type (P)", Array.from(selectedFilters.lunarPurnimantaType), filterModes.lunarPurnimantaType);
   addEntries(
     "Muhurta",
     Array.from(selectedFilters.muhurta).map((key) => {

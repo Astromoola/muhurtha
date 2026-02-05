@@ -104,6 +104,18 @@ export const FILTER_DEFS = {
     label: "Lunar Month (Poornimanta)",
     helper: "Pick months using the Poornimanta convention.",
   },
+  lunar_month_amanta_type: {
+    key: "lunar_month_amanta_type",
+    bandKey: "lunar_month_amanta_type",
+    label: "Maasa Type (Amanta)",
+    helper: "Filter by Regular, Adhika, or Kshaya Amanta months.",
+  },
+  lunar_month_poornimanta_type: {
+    key: "lunar_month_poornimanta_type",
+    bandKey: "lunar_month_poornimanta_type",
+    label: "Maasa Type (Poornimanta)",
+    helper: "Filter by Regular, Adhika, or Kshaya Poornimanta months.",
+  },
   solar_month: { key: "solar_month", bandKey: "solar_month", label: "Solar Month", helper: "Align with Tamil/Malayalam solar months." },
   kala_day: { key: "kala_day", bandKey: "kala_day", label: "Kala Vela (Day)", helper: "Use daytime Kala sons (Kala, Paridhi, etc.)." },
   kala_night: { key: "kala_night", bandKey: "kala_night", label: "Kala Vela (Night)", helper: "Night-time Kala vela segments." },

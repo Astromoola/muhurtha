@@ -388,7 +388,7 @@ function resolveSignColor(band, valueInt) {
 function resolveLunarMonthColor(band, valueInt) {
   if (!valueInt) return null;
   const base = band.replace(/_(day|night)$/, "");
-  if (base.startsWith("lunar_month")) {
+  if (base.startsWith("lunar_month") && !base.includes("_type") && !base.includes("_lost")) {
     const idx = valueInt - 1;
     if (idx >= 0 && idx < lunarMonthNakIndex.length) {
       const nak = lunarMonthNakIndex[idx];
